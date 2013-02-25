@@ -1,0 +1,33 @@
+{
+  "name": "decoder-ring",
+    "version": "0.1.0",
+    "description": "Decode binary buffers using a JSON specification",
+    "main": "lib/index.js",
+    "scripts": {
+      "pretest": "coffee -o lib -c src/*.coffee",
+      "prepublish": "coffee -o lib -c src/*.coffee",
+      "test": "mocha"
+    },
+    "repository": {
+      "type": "git",
+      "url": "http://github.com/asbaker/node-decoder-ring"
+    },
+    "keywords": ["buffer", "binary","decode"],
+    "author": "Tony Baker <anthony.s.baker@gmail.com>",
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {
+      "mocha": "1.8.1",
+      "chai":"1.5.0",
+      "coffee-script": "1.4.0"
+    },
+    "engines" : { "node" : ">= 0.6" },
+    "bugs" : "http://github.com/asbaker/node-decoder-ring/issues",
+    "homepage": "http://github.com/asbaker/node-decoder-ring",
+    "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/asbaker/node-decoder-ring/raw/master/LICENSE"
+    }
+  ]
+}
