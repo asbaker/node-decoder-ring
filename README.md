@@ -1,6 +1,8 @@
 node-decoder-ring
 =================
 
+[![Build Status](https://travis-ci.org/asbaker/node-decoder-ring.png)](https://travis-ci.org/asbaker/node-decoder-ring])
+
 *IMPORTANT: This module only works with node v0.6.0 and later.*
 
 Decoder Ring allows you to use a JSON specification to decode [Node.js Buffers](http://nodejs.org/api/buffer.html) into a Javascript object.
