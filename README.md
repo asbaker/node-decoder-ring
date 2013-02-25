@@ -1,7 +1,7 @@
 node-decoder-ring
 =================
 
-IMPORTANT: This module only works with node v0.6.0 and later.
+*IMPORTANT: This module only works with node v0.6.0 and later.*
 
 Decoder Ring allows you to use a JSON specification to decode [Node.js Buffers](http://nodejs.org/api/buffer.html) into a Javascript object.
 
@@ -37,16 +37,19 @@ The JSON specification is used to specify endianness and a description of the fi
 All fields must have a name, a starting byte, and a type. The name is used for assigning the property in the resulting javascript object.
 
 #### Types
-* int8 - Signed 8-bit integer.
-* uint8 - Unsigned 8-bit integer.
-* uint16 - Unsigned 16-bit integer.
-* float - 4-bit floating point number.
-* double - 8-bit double precision floating point number.
-* ascii - 8-bit per character ASCII encoded text.
+* **int8** - Signed 8-bit integer
+* **uint8** - Unsigned 8-bit integer
+* **uint16** - Unsigned 16-bit integer
+* **float** - 4-bit floating point number
+* **double** - 8-bit double precision floating point number
+* **ascii** - 8-bit per character ASCII encoded text
+
     This field type must also have a length property which is a count of the number of characters.
-* utf8 - 8-bit per character UTF8 encoded text.
+* **utf8** - 8-bit per character UTF8 encoded text
+
     This field type must also have a length property which is a count of the number of characters.
-* bit - true/false values
+* **bit** - true/false values
+
     Bit fields are pieces of a 1-byte unsigned integer. Given a big endian, unsigned integer of 129, it will appear as the following when broken down into bits:
 
 
