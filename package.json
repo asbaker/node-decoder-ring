@@ -1,11 +1,11 @@
 {
   "name": "decoder-ring",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Decode binary buffers using a JSON specification",
-    "main": "lib/index.js",
+    "main": "lib/DecoderRing.js",
     "scripts": {
-      "pretest": "coffee -o lib -c src/*.coffee",
-      "prepublish": "coffee -o lib -c src/*.coffee",
+      "pretest": "rm -rf lib; coffee -o lib -c src/*.coffee",
+      "prepublish": "rm -rf lib; coffee -o lib -c src/*.coffee",
       "test": "mocha"
     },
     "repository": {
@@ -18,8 +18,9 @@
     "dependencies": {},
     "devDependencies": {
       "mocha": "1.8.1",
-      "chai":"1.5.0",
-      "coffee-script": "1.4.0"
+      "chai": "1.5.0",
+      "sinon": "1.6.0",
+      "coffee-script": "1.5.0"
     },
     "engines" : { "node" : ">= 0.6" },
     "bugs" : "http://github.com/asbaker/node-decoder-ring/issues",

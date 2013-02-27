@@ -1,14 +1,5 @@
-class BinaryDecoderRing
+class FieldDecoder
   constructor: ->
-
-  decode: (buffer, spec) ->
-    o = {}
-    decodeFun = if spec.bigEndian then @decodeFieldBE else @decodeFieldLE
-
-    for field in spec.fields
-      o[field.name] = decodeFun(buffer, field)
-
-    return o
 
   decodeFieldBE: (buffer, fieldSpec) ->
     if fieldSpec.type is 'int8'
@@ -30,6 +21,10 @@ class BinaryDecoderRing
     else if fieldSpec.type is 'bit'
       i = buffer.readUInt8(fieldSpec.start)
       (i & Math.pow(2, fieldSpec.position)) > 0
+    else if fieldSpec.type is 'uint32'
+      buffer.readUInt32BE(fieldSpec.start)
+    else if fieldSpec.type is 'int32'
+      buffer.readInt32BE(fieldSpec.start)
 
   decodeFieldLE: (buffer, fieldSpec) ->
     if fieldSpec.type is 'int8'
@@ -51,5 +46,9 @@ class BinaryDecoderRing
     else if fieldSpec.type is 'bit'
       i = buffer.readUInt8(fieldSpec.start)
       (i & Math.pow(2, fieldSpec.position)) > 0
+    else if fieldSpec.type is 'uint32'
+      buffer.readUInt32LE(fieldSpec.start)
+    else if fieldSpec.type is 'int32'
+      buffer.readInt32LE(fieldSpec.start)
 
-module.exports = BinaryDecoderRing
+module.exports = FieldDecoder

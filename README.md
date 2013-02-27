@@ -9,7 +9,7 @@ Decoder Ring allows you to use a JSON specification to decode [Node.js Buffers](
 
 ## Installation
 
-    npm install decoder-ring
+	npm install decoder-ring
 
 ##  Usage
 
@@ -32,35 +32,42 @@ The JSON specification is used to specify endianness and a description of the fi
         {name: "field9", start: 37, type: 'bit', position: 7}
         {name: "field10", start: 37, type: 'bit', position: 6}
         {name: "field11", start: 37, type: 'bit', position: 0}
+        {name: "field12", start: 38, type: 'uint32'}
+        {name: "field13", start: 42, type: 'int32'}
     ]
 }
-```
+    
+    
+    ```
 
 All fields must have a name, a starting byte, and a type. The name is used for assigning the property in the resulting javascript object.
 
 #### Types
 * **int8** - Signed 8-bit integer
 * **uint8** - Unsigned 8-bit integer
+* **int16** - Signed 16-bit integer
 * **uint16** - Unsigned 16-bit integer
+* **int32** - Signed 32-bit integer
+* **uint32** - Unsigned 32-bit integer
 * **float** - 4-bit floating point number
 * **double** - 8-bit double precision floating point number
 * **ascii** - 8-bit per character ASCII encoded text
 
-    This field type must also have a length property which is a count of the number of characters.
+	This field type must also have a length property which is a count of the number of characters.
 * **utf8** - 8-bit per character UTF8 encoded text
 
-    This field type must also have a length property which is a count of the number of characters.
+	This field type must also have a length property which is a count of the number of characters.
 * **bit** - true/false values
 
-    Bit fields are pieces of a 1-byte unsigned integer. Given a big endian, unsigned integer of 129, it will appear as the following when broken down into bits:
+	Bit fields are pieces of a 1-byte unsigned integer. Given a big endian, unsigned integer of 129, it will appear as the following when broken down into bits:
 
 
   | 128(2^7) | 64(2^6) | 32(2^5) | 16(2^4) | 8(2^3) | 4(2^2) | 2(2^1) | 1(2^0) |
-  | :--:     | :--:    | :--:    | :--:    | :--:   | :--:   | :--:   | :--:   |
-  | 1        | 0       | 0       | 0       | 0      | 0      | 0      | 1      |
+  | :--:	 | :--:	| :--:	| :--:	| :--:   | :--:   | :--:   | :--:   |
+  | 1		| 0	   | 0	   | 0	   | 0	  | 0	  | 0	  | 1	  |
 
-    Bit fields must have a position property which is used to check if a specific bit is on or off in the 1-byte unsigned integer.
-    The position of the bit of interest, is defined as which power of two the bit falls in the integer. For the bit in the 128th's place, the position would be 7, for the bit in the 1's place the position would be 0.
+	Bit fields must have a position property which is used to check if a specific bit is on or off in the 1-byte unsigned integer.
+	The position of the bit of interest, is defined as which power of two the bit falls in the integer. For the bit in the 128th's place, the position would be 7, for the bit in the 1's place the position would be 0.
 
 
 ### Example
@@ -69,7 +76,7 @@ All fields must have a name, a starting byte, and a type. The name is used for a
 var DecoderRing = require("decoder-ring")
 var decoderRing = new DecoderRing();
 
-var bufferBE = new Buffer(38)
+var bufferBE = new Buffer(46)
 bufferBE.writeInt8(-127, 0)
 bufferBE.writeUInt8(254, 1)
 bufferBE.writeInt16BE(5327, 2)
@@ -79,10 +86,12 @@ bufferBE.writeDoubleBE(-1534.98, 10)
 bufferBE.write("ascii text", 18, 10,'ascii')
 bufferBE.write("utf8 text", 28, 9, 'utf8')
 bufferBE.writeUInt8(129, 37)
+bufferBE.writeUInt32BE(79001, 38)
+bufferBE.writeInt32BE(-79001, 42)
 
 var spec = {
-    bigEndian: true,
-    fields: [
+  bigEndian: true,
+  fields: [
     { name: "field1", start: 0,   type: 'int8'  },
     { name: "field2", start: 1,   type: 'uint8' },
     { name: "field3", start: 2,   type: 'int16' },
@@ -93,8 +102,10 @@ var spec = {
     { name: "field8", start: 28,  type: 'utf8', length: 9  },
     { name: "field9", start: 37,  type: 'bit', position: 7 },
     { name: "field10", start: 37, type: 'bit', position: 6 },
-    { name: "field11", start: 37, type: 'bit', position: 0 }
-    ]
+    { name: "field11", start: 37, type: 'bit', position: 0 },
+    { name: "field12", start: 38, type: 'uint32' },
+    { name: "field13", start: 42, type: 'int32' }
+  ]
 }
 
 var result = decoderRing.decode(bufferBE, spec)
@@ -106,26 +117,28 @@ Result is the following javascript object:
 
 ```javascript
 { field1: -127,
-    field2: 254,
-    field3: 5327,
-    field4: 5328,
-    field5: -15.329999923706055,
-    field6: -1534.98,
-    field7: 'ascii text',
-    field8: 'utf8 text',
-    field9: true,
-    field10: false,
-    field11: true }
+  field2: 254,
+  field3: 5327,
+  field4: 5328,
+  field5: -15.329999923706055,
+  field6: -1534.98,
+  field7: 'ascii text',
+  field8: 'utf8 text',
+  field9: true,
+  field10: false,
+  field11: true,
+  field12: 79001,
+  field13: -79001 }
 ```
 
 ## Development
 
 ### Running tests
-    npm test
+	npm test
 
 ### Testing the package locally
-    npm pack
-    npm install decoder-ring-0.1.0.tgz
-    node example.js
+	npm pack
+	npm install decoder-ring-0.2.1.tgz
+	node example.js
 
 
