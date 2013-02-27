@@ -38,7 +38,7 @@ The JSON specification is used to specify endianness and a description of the fi
 }
     
     
-    ```
+```
 
 All fields must have a name, a starting byte, and a type. The name is used for assigning the property in the resulting javascript object.
 
