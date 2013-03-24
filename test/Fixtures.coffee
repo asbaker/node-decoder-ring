@@ -24,4 +24,47 @@ bufferLE.writeUInt8(129, 37)
 bufferLE.writeUInt32LE(79002, 38)
 bufferLE.writeInt32LE(-79002, 42)
 
-module.exports = {bufferBE: bufferBE, bufferLE: bufferLE}
+bufferBESpec = {
+  bigEndian: true
+  fields: [
+    {name: "field1", start: 0,  type: 'int8'  }
+    {name: "field2", start: 1,  type: 'uint8' }
+    {name: "field3", start: 2,  type: 'int16' }
+    {name: "field4", start: 4,  type: 'uint16'}
+    {name: "field5", start: 6,  type: 'float' }
+    {name: "field6", start: 10, type: 'double'}
+    {name: "field7", start: 18, type: 'ascii', length: 10 }
+    {name: "field8", start: 28, type: 'utf8',  length: 9  }
+    {name: "field9", start: 37, type: 'bit', position: 7}
+    {name: "field10", start: 37, type: 'bit', position: 6}
+    {name: "field11", start: 37, type: 'bit', position: 0}
+    {name: "field12", start: 38, type: 'uint32'}
+    {name: "field13", start: 42, type: 'int32'}
+  ]
+}
+
+bufferLESpec = {
+  bigEndian: false
+  fields: [
+    {name: "field1", start: 0,  type: 'int8'  }
+    {name: "field2", start: 1,  type: 'uint8' }
+    {name: "field3", start: 2,  type: 'int16' }
+    {name: "field4", start: 4,  type: 'uint16'}
+    {name: "field5", start: 6,  type: 'float' }
+    {name: "field6", start: 10, type: 'double'}
+    {name: "field7", start: 18, type: 'ascii', length: 10 }
+    {name: "field8", start: 28, type: 'utf8',  length: 9  }
+    {name: "field9", start: 37, type: 'bit', position: 7}
+    {name: "field10", start: 37, type: 'bit', position: 6}
+    {name: "field11", start: 37, type: 'bit', position: 0}
+    {name: "field12", start: 38, type: 'uint32'}
+    {name: "field13", start: 42, type: 'int32'}
+  ]
+}
+
+module.exports = {
+  bufferBE: bufferBE,
+  bufferLE: bufferLE,
+  bufferBESpec: bufferBESpec,
+  bufferLESpec: bufferLESpec
+}

@@ -1,36 +1,19 @@
 expect = require("chai").expect
 
-# DecoderRing = require("../src/DecoderRing") # coffeescript
-DecoderRing = require("../lib/DecoderRing") # compiled javascript
+DecoderRing = require("../src/DecoderRing") # coffeescript
+# DecoderRing = require("../lib/DecoderRing") # compiled javascript
+
 # DecoderRing = require("decoder-ring") # package
 
 describe "BinaryDecoderRing Integration Test", ->
   beforeEach ->
     @subject = new DecoderRing
-    {@bufferBE, @bufferLE} = require("./Fixtures")
+    {@bufferBE, @bufferLE, @bufferBESpec, @bufferLESpec} = require("./Fixtures")
 
   describe "#decode", ->
     it "decodes big endian specifications", ->
-      spec = {
-        bigEndian: true
-        fields: [
-          {name: "field1", start: 0,  type: 'int8'  }
-          {name: "field2", start: 1,  type: 'uint8' }
-          {name: "field3", start: 2,  type: 'int16' }
-          {name: "field4", start: 4,  type: 'uint16'}
-          {name: "field5", start: 6,  type: 'float' }
-          {name: "field6", start: 10, type: 'double'}
-          {name: "field7", start: 18, type: 'ascii', length: 10 }
-          {name: "field8", start: 28, type: 'utf8',  length: 9  }
-          {name: "field9", start: 37, type: 'bit', position: 7}
-          {name: "field10", start: 37, type: 'bit', position: 6}
-          {name: "field11", start: 37, type: 'bit', position: 0}
-          {name: "field12", start: 38, type: 'uint32'}
-          {name: "field13", start: 42, type: 'int32'}
-        ]
-      }
 
-      result = @subject.decode(@bufferBE, spec)
+      result = @subject.decode(@bufferBE, @bufferBESpec)
 
       expect(result.field1).to.equal(-127)
       expect(result.field2).to.equal(254)
@@ -47,26 +30,7 @@ describe "BinaryDecoderRing Integration Test", ->
       expect(result.field13).to.equal(-79001)
 
     it "decodes little endian specifications", ->
-      spec = {
-        bigEndian: false
-        fields: [
-          {name: "field1", start: 0,  type: 'int8'  }
-          {name: "field2", start: 1,  type: 'uint8' }
-          {name: "field3", start: 2,  type: 'int16' }
-          {name: "field4", start: 4,  type: 'uint16'}
-          {name: "field5", start: 6,  type: 'float' }
-          {name: "field6", start: 10, type: 'double'}
-          {name: "field7", start: 18, type: 'ascii', length: 10 }
-          {name: "field8", start: 28, type: 'utf8',  length: 9  }
-          {name: "field9", start: 37, type: 'bit', position: 7}
-          {name: "field10", start: 37, type: 'bit', position: 6}
-          {name: "field11", start: 37, type: 'bit', position: 0}
-          {name: "field12", start: 38, type: 'uint32'}
-          {name: "field13", start: 42, type: 'int32'}
-        ]
-      }
-
-      result = @subject.decode(@bufferLE, spec)
+      result = @subject.decode(@bufferLE, @bufferLESpec)
 
       expect(result.field1).to.equal(-127)
       expect(result.field2).to.equal(254)
@@ -81,4 +45,40 @@ describe "BinaryDecoderRing Integration Test", ->
       expect(result.field11).to.be.true
       expect(result.field12).to.equal(79002)
       expect(result.field13).to.equal(-79002)
+
+  describe "#encode", ->
+    it "encodes big endian specifications", ->
+      decoded = @subject.decode(@bufferBE, @bufferBESpec)
+      encoded = @subject.encode(decoded, @bufferBESpec)
+      expect(encoded).to.deep.equal(@bufferBE)
+
+
+    it "encodes little endian specifications", ->
+      decoded = @subject.decode(@bufferLE, @bufferLESpec)
+      encoded = @subject.encode(decoded, @bufferLESpec)
+      expect(encoded).to.deep.equal(@bufferLE)
+
+    it "encodes bit fields by anding them together", ->
+      spec = {
+        bigEndian: false
+        fields: [
+          {name: "field1", start: 0,  type: 'bit', position: 0  }
+          {name: "field2", start: 0,  type: 'bit', position: 1  }
+          {name: "field3", start: 1,  type: 'bit', position: 2  }
+          {name: "field4", start: 1,  type: 'bit', position: 3  }
+        ]
+      }
+
+      obj = {
+        field1: true
+        field2: true
+        field3: false
+        field4: true
+      }
+
+      decoded = @subject.encode(obj, spec)
+      shouldBe = new Buffer(2)
+      shouldBe.writeInt8(3,0)
+      shouldBe.writeInt8(8,1)
+      expect(decoded).to.deep.equal(shouldBe)
 

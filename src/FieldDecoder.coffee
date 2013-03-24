@@ -1,4 +1,5 @@
 class FieldDecoder
+  #TODO consider an array type ....
   constructor: ->
 
   decodeFieldBE: (buffer, fieldSpec) ->

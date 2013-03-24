@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.0 (2013-03-23)
+- Add functions to encode javascript object to a buffer according to the specification
+- Upgrade coffeescript devDependency to 1.6.2
+
 ## 0.2.0 (2013-02-26)
 - Add int32 and uint32 field types, closes github issue #3
 - Internal project restructuring

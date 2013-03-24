@@ -5,7 +5,7 @@ node-decoder-ring
 
 *IMPORTANT: This module only works with node v0.6.0 and later.*
 
-Decoder Ring allows you to use a JSON specification to decode [Node.js Buffers](http://nodejs.org/api/buffer.html) into a Javascript object.
+Decoder Ring allows you to use a Javascript object as a specification to decode [Node.js Buffers](http://nodejs.org/api/buffer.html) into a Javascript object.
 
 ## Installation
 
@@ -14,30 +14,30 @@ Decoder Ring allows you to use a JSON specification to decode [Node.js Buffers](
 ##  Usage
 
 
-### JSON Specification
+### Javascript Object Specification
 
-The JSON specification is used to specify endianness and a description of the fields present in the buffer.
+The Javascript object specification is used to specify endianness and a description of the fields present in the buffer.
 ```javascript
 {
-    bigEndian: true
+    bigEndian: true,
     fields: [
-        {name: "field1", start: 0,  type: 'int8'  }
-        {name: "field2", start: 1,  type: 'uint8' }
-        {name: "field3", start: 2,  type: 'int16' }
-        {name: "field4", start: 4,  type: 'uint16'}
-        {name: "field5", start: 6,  type: 'float' }
-        {name: "field6", start: 10, type: 'double'}
-        {name: "field7", start: 18, type: 'ascii', length: 10 }
-        {name: "field8", start: 28, type: 'utf8',  length: 9  }
-        {name: "field9", start: 37, type: 'bit', position: 7}
-        {name: "field10", start: 37, type: 'bit', position: 6}
-        {name: "field11", start: 37, type: 'bit', position: 0}
-        {name: "field12", start: 38, type: 'uint32'}
+        {name: "field1", start: 0,  type: 'int8'  },
+        {name: "field2", start: 1,  type: 'uint8' },
+        {name: "field3", start: 2,  type: 'int16' },
+        {name: "field4", start: 4,  type: 'uint16'},
+        {name: "field5", start: 6,  type: 'float' },
+        {name: "field6", start: 10, type: 'double'},
+        {name: "field7", start: 18, type: 'ascii', length: 10 },
+        {name: "field8", start: 28, type: 'utf8',  length: 9  },
+        {name: "field9", start: 37, type: 'bit', position: 7},
+        {name: "field10", start: 37, type: 'bit', position: 6},
+        {name: "field11", start: 37, type: 'bit', position: 0},
+        {name: "field12", start: 38, type: 'uint32'},
         {name: "field13", start: 42, type: 'int32'}
     ]
 }
-    
-    
+
+
 ```
 
 All fields must have a name, a starting byte, and a type. The name is used for assigning the property in the resulting javascript object.
@@ -77,13 +77,14 @@ var DecoderRing = require("decoder-ring")
 var decoderRing = new DecoderRing();
 
 var bufferBE = new Buffer(46)
+bufferBE.fill(0)
 bufferBE.writeInt8(-127, 0)
 bufferBE.writeUInt8(254, 1)
 bufferBE.writeInt16BE(5327, 2)
 bufferBE.writeUInt16BE(5328, 4)
 bufferBE.writeFloatBE(-15.33, 6)
 bufferBE.writeDoubleBE(-1534.98, 10)
-bufferBE.write("ascii text", 18, 10,'ascii')
+bufferBE.write("ascii", 18, 10,'ascii')
 bufferBE.write("utf8 text", 28, 9, 'utf8')
 bufferBE.writeUInt8(129, 37)
 bufferBE.writeUInt32BE(79001, 38)
@@ -108,12 +109,15 @@ var spec = {
   ]
 }
 
-var result = decoderRing.decode(bufferBE, spec)
 
+var result = decoderRing.decode(bufferBE, spec)
 console.log(result)
+
+var buffer = decoderRing.encode(result, spec)
+console.log(buffer)
 ```
 
-Result is the following javascript object:
+Result when decoding is the following javascript object:
 
 ```javascript
 { field1: -127,
@@ -131,6 +135,8 @@ Result is the following javascript object:
   field13: -79001 }
 ```
 
+The result when encoding is a javascript buffer
+
 ## Development
 
 ### Running tests
@@ -138,7 +144,7 @@ Result is the following javascript object:
 
 ### Testing the package locally
 	npm pack
-	npm install decoder-ring-0.2.1.tgz
+	npm install decoder-ring-0.3.0.tgz
 	node example.js
 
 

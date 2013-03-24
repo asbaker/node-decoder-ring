@@ -1,7 +1,6 @@
 expect = require("chai").expect
 
-# FieldDecoder = require("../src/FieldDecoder") # coffeescript
-FieldDecoder = require("../lib/FieldDecoder") # compiled javascript
+FieldDecoder = require("../src/FieldDecoder")
 
 describe "FieldDecoder unit test", ->
   beforeEach ->
