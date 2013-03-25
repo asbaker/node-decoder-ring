@@ -21,6 +21,32 @@ describe "FieldEncoder unit test", ->
       expect(@subject).to.respondTo("encodeFieldLE")
 
   describe "#encodeFieldBE", ->
+    it "does not encode if the object's property is undefined", ->
+      expectedBuffer = new Buffer(2)
+      expectedBuffer.fill(0)
+
+      outBuffer = new Buffer(2)
+      outBuffer.fill(0)
+
+      obj = {field1: undefined}
+      fieldSpec = {name: "field1", start: 1, type: 'int8'}
+
+      result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec)
+      expect(result).to.deep.equal(expectedBuffer)
+
+    it "does not encode if the object's property is null", ->
+      expectedBuffer = new Buffer(2)
+      expectedBuffer.fill(0)
+
+      outBuffer = new Buffer(2)
+      outBuffer.fill(0)
+
+      obj = {field1: null}
+      fieldSpec = {name: "field1", start: 1, type: 'int8'}
+
+      result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec)
+      expect(result).to.deep.equal(expectedBuffer)
+
     it "encodes an int8 field", ->
       expectedBuffer = new Buffer(2)
       expectedBuffer.fill(0)
@@ -176,6 +202,32 @@ describe "FieldEncoder unit test", ->
       expect(result).to.deep.equal(expectedBuffer)
 
   describe "#encodeFieldLE", ->
+    it "does not encode if the object's property is undefined", ->
+      expectedBuffer = new Buffer(2)
+      expectedBuffer.fill(0)
+
+      outBuffer = new Buffer(2)
+      outBuffer.fill(0)
+
+      obj = {field1: undefined}
+      fieldSpec = {name: "field1", start: 1, type: 'int8'}
+
+      result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec)
+      expect(result).to.deep.equal(expectedBuffer)
+
+    it "does not encode if the object's property is null", ->
+      expectedBuffer = new Buffer(2)
+      expectedBuffer.fill(0)
+
+      outBuffer = new Buffer(2)
+      outBuffer.fill(0)
+
+      obj = {field1: null}
+      fieldSpec = {name: "field1", start: 1, type: 'int8'}
+
+      result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec)
+      expect(result).to.deep.equal(expectedBuffer)
+
     it "encodes an int8 field", ->
       expectedBuffer = new Buffer(2)
       expectedBuffer.fill(0)

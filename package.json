@@ -1,6 +1,6 @@
 {
   "name": "decoder-ring",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "Decode binary buffers using a JSON specification",
     "main": "lib/DecoderRing.js",
     "scripts": {
