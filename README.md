@@ -144,7 +144,7 @@ The result when encoding is a javascript buffer
 
 ### Testing the package locally
 	npm pack
-	npm install decoder-ring-0.3.0.tgz
+	npm install decoder-ring-0.3.2.tgz
 	node example.js
 
 

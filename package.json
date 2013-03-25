@@ -1,6 +1,6 @@
 {
   "name": "decoder-ring",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "Decode binary buffers using a JSON specification",
     "main": "lib/DecoderRing.js",
     "scripts": {
@@ -14,6 +14,9 @@
     },
     "keywords": ["buffer", "binary","decode"],
     "author": "Tony Baker <anthony.s.baker@gmail.com>",
+    "contributors": [
+      "Jacob Jewell <jakesjews@immersiveapplications.com>"
+    ],
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
