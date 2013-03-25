@@ -27,19 +27,19 @@ class DecoderRing
     else
       encodeFun = @fieldEncoder.encodeFieldLE
 
-    runningThing = {}
+    bitFieldAccumulator = {}
 
     for fieldSpec in spec.fields
       unless fieldSpec.type is 'bit'
         buffer = encodeFun(buffer, obj, fieldSpec)
       else
         val = if obj[fieldSpec.name] then Math.pow(2, fieldSpec.position) else 0
-        currentVal = runningThing["#{fieldSpec.start}"] || 0
-        runningThing["#{fieldSpec.start}"] = currentVal + val
+        currentVal = bitFieldAccumulator["#{fieldSpec.start}"] || 0
+        bitFieldAccumulator["#{fieldSpec.start}"] = currentVal + val
 
     # encode all the bit fields that we accumulated
-    for r in Object.keys(runningThing)
-      buffer = encodeFun(buffer, runningThing, {name: r, start: parseInt(r), type: 'uint8'})
+    for r in Object.keys(bitFieldAccumulator)
+      buffer = encodeFun(buffer, bitFieldAccumulator, {name: r, start: parseInt(r), type: 'uint8'})
 
     return buffer
 

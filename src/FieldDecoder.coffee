@@ -1,55 +1,36 @@
 class FieldDecoder
-  #TODO consider an array type ....
-  constructor: ->
-
   decodeFieldBE: (buffer, fieldSpec) ->
-    if fieldSpec.type is 'int8'
-      buffer.readInt8(fieldSpec.start)
-    else if fieldSpec.type is 'uint8'
-      buffer.readUInt8(fieldSpec.start)
-    else if fieldSpec.type is 'int16'
-      buffer.readInt16BE(fieldSpec.start)
-    else if fieldSpec.type is 'uint16'
-      buffer.readUInt16BE(fieldSpec.start)
-    else if fieldSpec.type is 'float'
-      buffer.readFloatBE(fieldSpec.start)
-    else if fieldSpec.type is 'double'
-      buffer.readDoubleBE(fieldSpec.start)
-    else if fieldSpec.type is 'ascii'
-      buffer.toString('ascii', fieldSpec.start, fieldSpec.start+fieldSpec.length)
-    else if fieldSpec.type is 'utf8'
-      buffer.toString('utf8', fieldSpec.start, fieldSpec.start+fieldSpec.length)
-    else if fieldSpec.type is 'bit'
-      i = buffer.readUInt8(fieldSpec.start)
-      (i & Math.pow(2, fieldSpec.position)) > 0
-    else if fieldSpec.type is 'uint32'
-      buffer.readUInt32BE(fieldSpec.start)
-    else if fieldSpec.type is 'int32'
-      buffer.readInt32BE(fieldSpec.start)
+    switch fieldSpec.type
+      when 'int8'   then buffer.readInt8(fieldSpec.start)
+      when 'uint8'  then buffer.readUInt8(fieldSpec.start)
+      when 'int16'  then buffer.readInt16BE(fieldSpec.start)
+      when 'uint16' then buffer.readUInt16BE(fieldSpec.start)
+      when 'int32'  then buffer.readInt32BE(fieldSpec.start)
+      when 'uint32' then buffer.readUInt32BE(fieldSpec.start)
+      when 'float'  then buffer.readFloatBE(fieldSpec.start)
+      when 'double' then buffer.readDoubleBE(fieldSpec.start)
+      when 'ascii'  then buffer.toString('ascii', fieldSpec.start, fieldSpec.start+fieldSpec.length)
+      when 'utf8'   then buffer.toString('utf8', fieldSpec.start, fieldSpec.start+fieldSpec.length)
+      when 'bit'
+        i = buffer.readUInt8(fieldSpec.start)
+        (i & Math.pow(2, fieldSpec.position)) > 0
+#TODO error case
 
   decodeFieldLE: (buffer, fieldSpec) ->
-    if fieldSpec.type is 'int8'
-      buffer.readInt8(fieldSpec.start)
-    else if fieldSpec.type is 'uint8'
-      buffer.readUInt8(fieldSpec.start)
-    else if fieldSpec.type is 'int16'
-      buffer.readInt16LE(fieldSpec.start)
-    else if fieldSpec.type is 'uint16'
-      buffer.readUInt16LE(fieldSpec.start)
-    else if fieldSpec.type is 'float'
-      buffer.readFloatLE(fieldSpec.start)
-    else if fieldSpec.type is 'double'
-      buffer.readDoubleLE(fieldSpec.start)
-    else if fieldSpec.type is 'ascii'
-      buffer.toString('ascii', fieldSpec.start, fieldSpec.start+fieldSpec.length)
-    else if fieldSpec.type is 'utf8'
-      buffer.toString('utf8', fieldSpec.start, fieldSpec.start+fieldSpec.length)
-    else if fieldSpec.type is 'bit'
-      i = buffer.readUInt8(fieldSpec.start)
-      (i & Math.pow(2, fieldSpec.position)) > 0
-    else if fieldSpec.type is 'uint32'
-      buffer.readUInt32LE(fieldSpec.start)
-    else if fieldSpec.type is 'int32'
-      buffer.readInt32LE(fieldSpec.start)
+    switch fieldSpec.type
+      when 'int8'   then buffer.readInt8(fieldSpec.start)
+      when 'uint8'  then buffer.readUInt8(fieldSpec.start)
+      when 'int16'  then buffer.readInt16LE(fieldSpec.start)
+      when 'uint16' then buffer.readUInt16LE(fieldSpec.start)
+      when 'int32'  then buffer.readInt32LE(fieldSpec.start)
+      when 'uint32' then buffer.readUInt32LE(fieldSpec.start)
+      when 'float'  then buffer.readFloatLE(fieldSpec.start)
+      when 'double' then buffer.readDoubleLE(fieldSpec.start)
+      when 'ascii'  then buffer.toString('ascii', fieldSpec.start, fieldSpec.start+fieldSpec.length)
+      when 'utf8'   then buffer.toString('utf8', fieldSpec.start, fieldSpec.start+fieldSpec.length)
+      when 'bit'
+        i = buffer.readUInt8(fieldSpec.start)
+        (i & Math.pow(2, fieldSpec.position)) > 0
+#TODO error case
 
 module.exports = FieldDecoder
