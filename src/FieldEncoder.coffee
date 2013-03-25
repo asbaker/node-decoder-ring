@@ -19,53 +19,47 @@ class FieldEncoder
 
 
   encodeFieldBE: (buffer, obj, fieldSpec) ->
-    outBuffer = new Buffer(buffer)
-
     if obj[fieldSpec.name]?
       switch fieldSpec.type
-        when 'int8'   then outBuffer.writeInt8(obj[fieldSpec.name], fieldSpec.start)
-        when 'uint8'  then outBuffer.writeUInt8(obj[fieldSpec.name], fieldSpec.start)
-        when 'int16'  then outBuffer.writeInt16BE(obj[fieldSpec.name], fieldSpec.start)
-        when 'uint16' then outBuffer.writeUInt16BE(obj[fieldSpec.name], fieldSpec.start)
-        when 'float'  then outBuffer.writeFloatBE(obj[fieldSpec.name], fieldSpec.start)
-        when 'double' then outBuffer.writeDoubleBE(obj[fieldSpec.name], fieldSpec.start)
-        when 'ascii'  then outBuffer.write(obj[fieldSpec.name], fieldSpec.start, fieldSpec.length, 'ascii')
-        when 'utf8'   then outBuffer.write(obj[fieldSpec.name], fieldSpec.start, fieldSpec.length, 'utf8')
-        when 'uint32' then outBuffer.writeUInt32BE(obj[fieldSpec.name], fieldSpec.start)
-        when 'int32'  then outBuffer.writeInt32BE(obj[fieldSpec.name], fieldSpec.start)
+        when 'int8'   then buffer.writeInt8(obj[fieldSpec.name], fieldSpec.start)
+        when 'uint8'  then buffer.writeUInt8(obj[fieldSpec.name], fieldSpec.start)
+        when 'int16'  then buffer.writeInt16BE(obj[fieldSpec.name], fieldSpec.start)
+        when 'uint16' then buffer.writeUInt16BE(obj[fieldSpec.name], fieldSpec.start)
+        when 'float'  then buffer.writeFloatBE(obj[fieldSpec.name], fieldSpec.start)
+        when 'double' then buffer.writeDoubleBE(obj[fieldSpec.name], fieldSpec.start)
+        when 'ascii'  then buffer.write(obj[fieldSpec.name], fieldSpec.start, fieldSpec.length, 'ascii')
+        when 'utf8'   then buffer.write(obj[fieldSpec.name], fieldSpec.start, fieldSpec.length, 'utf8')
+        when 'uint32' then buffer.writeUInt32BE(obj[fieldSpec.name], fieldSpec.start)
+        when 'int32'  then buffer.writeInt32BE(obj[fieldSpec.name], fieldSpec.start)
         when 'bit'
           if obj[fieldSpec.name] is true # protection from type problems
-            outBuffer.writeUInt8(Math.pow(2, fieldSpec.position), fieldSpec.start)
+            buffer.writeUInt8(Math.pow(2, fieldSpec.position), fieldSpec.start)
           else
-            outBuffer.writeUInt8(0, fieldSpec.start)
-
+            buffer.writeUInt8(0, fieldSpec.start)
         #TODO error case
 
-    return outBuffer
+    return buffer
 
   encodeFieldLE: (buffer, obj, fieldSpec) ->
-    outBuffer = new Buffer(buffer)
-
     if obj[fieldSpec.name]?
       switch fieldSpec.type
-        when 'int8'   then outBuffer.writeInt8(obj[fieldSpec.name], fieldSpec.start)
-        when 'uint8'  then outBuffer.writeUInt8(obj[fieldSpec.name], fieldSpec.start)
-        when 'int16'  then outBuffer.writeInt16LE(obj[fieldSpec.name], fieldSpec.start)
-        when 'uint16' then outBuffer.writeUInt16LE(obj[fieldSpec.name], fieldSpec.start)
-        when 'float'  then outBuffer.writeFloatLE(obj[fieldSpec.name], fieldSpec.start)
-        when 'double' then outBuffer.writeDoubleLE(obj[fieldSpec.name], fieldSpec.start)
-        when 'ascii'  then outBuffer.write(obj[fieldSpec.name], fieldSpec.start, fieldSpec.length, 'ascii')
-        when 'utf8'   then outBuffer.write(obj[fieldSpec.name], fieldSpec.start, fieldSpec.length, 'utf8')
-        when 'uint32' then outBuffer.writeUInt32LE(obj[fieldSpec.name], fieldSpec.start)
-        when 'int32'  then outBuffer.writeInt32LE(obj[fieldSpec.name], fieldSpec.start)
+        when 'int8'   then buffer.writeInt8(obj[fieldSpec.name], fieldSpec.start)
+        when 'uint8'  then buffer.writeUInt8(obj[fieldSpec.name], fieldSpec.start)
+        when 'int16'  then buffer.writeInt16LE(obj[fieldSpec.name], fieldSpec.start)
+        when 'uint16' then buffer.writeUInt16LE(obj[fieldSpec.name], fieldSpec.start)
+        when 'float'  then buffer.writeFloatLE(obj[fieldSpec.name], fieldSpec.start)
+        when 'double' then buffer.writeDoubleLE(obj[fieldSpec.name], fieldSpec.start)
+        when 'ascii'  then buffer.write(obj[fieldSpec.name], fieldSpec.start, fieldSpec.length, 'ascii')
+        when 'utf8'   then buffer.write(obj[fieldSpec.name], fieldSpec.start, fieldSpec.length, 'utf8')
+        when 'uint32' then buffer.writeUInt32LE(obj[fieldSpec.name], fieldSpec.start)
+        when 'int32'  then buffer.writeInt32LE(obj[fieldSpec.name], fieldSpec.start)
         when 'bit'
           if obj[fieldSpec.name] is true # protection from type problems
-            outBuffer.writeUInt8(Math.pow(2, fieldSpec.position), fieldSpec.start)
+            buffer.writeUInt8(Math.pow(2, fieldSpec.position), fieldSpec.start)
           else
-            outBuffer.writeUInt8(0, fieldSpec.start)
+            buffer.writeUInt8(0, fieldSpec.start)
         #TODO error case
 
-    return outBuffer
-
+    return buffer
 
 module.exports = FieldEncoder
