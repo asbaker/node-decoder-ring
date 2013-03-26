@@ -21,7 +21,21 @@ describe "FieldEncoder unit test", ->
       expect(@subject).to.respondTo("encodeFieldLE")
 
   describe "#encodeFieldBE", ->
-    it "does not encode if the object's property is undefined", ->
+    it "defaults the value according to the fieldSpec when property is undefined", ->
+      expectedBuffer = new Buffer(2)
+      expectedBuffer.fill(0)
+      expectedBuffer.writeInt8(-11, 1)
+
+      outBuffer = new Buffer(2)
+      outBuffer.fill(0)
+
+      obj = {}
+      fieldSpec = {name: "field1", start: 1, type: 'int8', default: -11}
+
+      result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec)
+      expect(result).to.deep.equal(expectedBuffer)
+
+    it "does not encode if the object's property is undefined and there isn't a default", ->
       expectedBuffer = new Buffer(2)
       expectedBuffer.fill(0)
 
@@ -34,7 +48,7 @@ describe "FieldEncoder unit test", ->
       result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec)
       expect(result).to.deep.equal(expectedBuffer)
 
-    it "does not encode if the object's property is null", ->
+    it "does not encode if the object's property is null and there isn't a default", ->
       expectedBuffer = new Buffer(2)
       expectedBuffer.fill(0)
 
@@ -202,7 +216,21 @@ describe "FieldEncoder unit test", ->
       expect(result).to.deep.equal(expectedBuffer)
 
   describe "#encodeFieldLE", ->
-    it "does not encode if the object's property is undefined", ->
+    it "will use the default default value according to the fieldSpec when property is undefined", ->
+      expectedBuffer = new Buffer(2)
+      expectedBuffer.fill(0)
+      expectedBuffer.writeInt8(-11, 1)
+
+      outBuffer = new Buffer(2)
+      outBuffer.fill(0)
+
+      obj = {}
+      fieldSpec = {name: "field1", start: 1, type: 'int8', default: -11}
+
+      result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec)
+      expect(result).to.deep.equal(expectedBuffer)
+
+    it "does not encode if the object's property is undefined and there isn't a default", ->
       expectedBuffer = new Buffer(2)
       expectedBuffer.fill(0)
 
@@ -215,7 +243,7 @@ describe "FieldEncoder unit test", ->
       result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec)
       expect(result).to.deep.equal(expectedBuffer)
 
-    it "does not encode if the object's property is null", ->
+    it "does not encode if the object's property is null and there isn't a default", ->
       expectedBuffer = new Buffer(2)
       expectedBuffer.fill(0)
 
