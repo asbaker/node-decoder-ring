@@ -34,13 +34,14 @@ The Javascript object specification is used to specify endianness and a descript
         {name: "field11", start: 37, type: 'bit', position: 0},
         {name: "field12", start: 38, type: 'uint32'},
         {name: "field13", start: 42, type: 'int32'}
+        {name: "field14", start: 46, type: 'int8', default: 42 }
     ]
 }
 
 
 ```
 
-All fields must have a name, a starting byte, and a type. The name is used for assigning the property in the resulting javascript object.
+All fields must have a name, a starting byte, and a type. The name is used for assigning the property in the resulting javascript object. Additionally, fields can have a default value which is used when encoding an object's properties that have null or undefined values.
 
 #### Types
 * **int8** - Signed 8-bit integer
@@ -76,7 +77,7 @@ All fields must have a name, a starting byte, and a type. The name is used for a
 var DecoderRing = require("decoder-ring")
 var decoderRing = new DecoderRing();
 
-var bufferBE = new Buffer(46)
+var bufferBE = new Buffer(47)
 bufferBE.fill(0)
 bufferBE.writeInt8(-127, 0)
 bufferBE.writeUInt8(254, 1)
@@ -89,6 +90,7 @@ bufferBE.write("utf8 text", 28, 9, 'utf8')
 bufferBE.writeUInt8(129, 37)
 bufferBE.writeUInt32BE(79001, 38)
 bufferBE.writeInt32BE(-79001, 42)
+bufferBE.writeInt8(1, 46)
 
 var spec = {
   bigEndian: true,
@@ -105,19 +107,28 @@ var spec = {
     { name: "field10", start: 37, type: 'bit', position: 6 },
     { name: "field11", start: 37, type: 'bit', position: 0 },
     { name: "field12", start: 38, type: 'uint32' },
-    { name: "field13", start: 42, type: 'int32' }
+    { name: "field13", start: 42, type: 'int32' },
+    { name: "field14", start: 46, type: 'int8', default: 42 }
   ]
 }
 
-
+// Decode the buffer into a javascript object
 var result = decoderRing.decode(bufferBE, spec)
 console.log(result)
 
+// Assign field14 to undefined to test default value on encoding
+result.field14 = undefined
+
+// Encode the object to a buffer
 var buffer = decoderRing.encode(result, spec)
 console.log(buffer)
+
+// Decode buffer to object and check field14 for default value
+var resultWithDefaultValue = decoderRing.decode(buffer, spec)
+console.log("Field14 default value: " + resultWithDefaultValue.field14)
 ```
 
-Result when decoding is the following javascript object:
+Result of the above example
 
 ```javascript
 { field1: -127,
@@ -126,16 +137,19 @@ Result when decoding is the following javascript object:
   field4: 5328,
   field5: -15.329999923706055,
   field6: -1534.98,
-  field7: 'ascii text',
+  field7: 'ascii\u0000\u0000\u0000\u0000\u0000',
   field8: 'utf8 text',
   field9: true,
   field10: false,
   field11: true,
   field12: 79001,
-  field13: -79001 }
-```
+  field13: -79001,
+  field14: 1 }
 
-The result when encoding is a javascript buffer
+<Buffer 81 fe 14 cf 14 d0 c1 75 47 ae c0 97 fb eb 85 1e b8 52 61 73 63 69 69 20 20 20 20 20 75 74 66 38 20 74 65 78 74 81 00 01 34 99 ff fe cb 67 2a>
+
+Field14 42
+```
 
 ## Development
 
@@ -144,7 +158,7 @@ The result when encoding is a javascript buffer
 
 ### Testing the package locally
 	npm pack
-	npm install decoder-ring-0.3.2.tgz
+	npm install decoder-ring-0.4.0.tgz
 	node example.js
 
 
