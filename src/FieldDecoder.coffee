@@ -11,6 +11,7 @@ class FieldDecoder
       when 'double' then buffer.readDoubleBE(fieldSpec.start)
       when 'ascii'  then buffer.toString('ascii', fieldSpec.start, fieldSpec.start+fieldSpec.length)
       when 'utf8'   then buffer.toString('utf8', fieldSpec.start, fieldSpec.start+fieldSpec.length)
+      when 'buffer' then buffer.slice(fieldSpec.start, fieldSpec.start+fieldSpec.length)
       when 'bit'
         i = buffer.readUInt8(fieldSpec.start)
         (i & Math.pow(2, fieldSpec.position)) > 0
@@ -28,6 +29,7 @@ class FieldDecoder
       when 'double' then buffer.readDoubleLE(fieldSpec.start)
       when 'ascii'  then buffer.toString('ascii', fieldSpec.start, fieldSpec.start+fieldSpec.length)
       when 'utf8'   then buffer.toString('utf8', fieldSpec.start, fieldSpec.start+fieldSpec.length)
+      when 'buffer' then buffer.slice(fieldSpec.start, fieldSpec.start+fieldSpec.length)
       when 'bit'
         i = buffer.readUInt8(fieldSpec.start)
         (i & Math.pow(2, fieldSpec.position)) > 0

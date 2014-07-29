@@ -10,6 +10,7 @@ bufferBE.write("utf8 text", 28, 9, 'utf8')
 bufferBE.writeUInt8(129, 37)
 bufferBE.writeUInt32BE(79001, 38)
 bufferBE.writeInt32BE(-79001, 42)
+bufferBE = Buffer.concat([bufferBE, new Buffer("test")])
 
 bufferLE = new Buffer(46)
 bufferLE.writeInt8(-127, 0)
@@ -23,6 +24,7 @@ bufferLE.write("utf8 text", 28, 9, 'utf8')
 bufferLE.writeUInt8(129, 37)
 bufferLE.writeUInt32LE(79002, 38)
 bufferLE.writeInt32LE(-79002, 42)
+bufferLE = Buffer.concat([bufferLE, new Buffer("test")])
 
 bufferBESpec = {
   bigEndian: true
@@ -40,6 +42,7 @@ bufferBESpec = {
     {name: "field11", start: 37, type: 'bit', position: 0}
     {name: "field12", start: 38, type: 'uint32'}
     {name: "field13", start: 42, type: 'int32'}
+    {name: "field14", start: 46, type: 'buffer', length: 4 }
   ]
 }
 
@@ -59,6 +62,7 @@ bufferLESpec = {
     {name: "field11", start: 37, type: 'bit', position: 0}
     {name: "field12", start: 38, type: 'uint32'}
     {name: "field13", start: 42, type: 'int32'}
+    {name: "field14", start: 46, type: 'buffer', length: 4 }
   ]
 }
 

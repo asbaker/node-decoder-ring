@@ -215,6 +215,18 @@ describe "FieldEncoder unit test", ->
       result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec)
       expect(result).to.deep.equal(expectedBuffer)
 
+    it "encodes a buffer field", ->
+      expectedBuffer = new Buffer("testing")
+
+      outBuffer = new Buffer(7)
+      outBuffer.fill(0)
+
+      obj = {field8: expectedBuffer}
+      fieldSpec = {name: "field8", start: 0, type: 'buffer', length: 7}
+
+      result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec)
+      expect(result).to.deep.equal(expectedBuffer)
+
   describe "#encodeFieldLE", ->
     it "will use the default default value according to the fieldSpec when property is undefined", ->
       expectedBuffer = new Buffer(2)
@@ -410,6 +422,19 @@ describe "FieldEncoder unit test", ->
       result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec)
       expect(result).to.deep.equal(expectedBuffer)
 
+    it "encodes a buffer field", ->
+      expectedBuffer = new Buffer("testing")
+
+      outBuffer = new Buffer(7)
+      outBuffer.fill(0)
+
+      obj = {field8: expectedBuffer}
+      fieldSpec = {name: "field8", start: 0, type: 'buffer', length: 7}
+
+      result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec)
+      expect(result).to.deep.equal(expectedBuffer)
+
+
   describe "#findFieldLength", ->
     it "works for int8's", ->
       field = {name: "field1", start: 2,  type: 'int8'  }
@@ -471,9 +496,15 @@ describe "FieldEncoder unit test", ->
       result = @subject.findFieldLength(field)
       expect(result).to.equal(3)
 
+    it "works for buffers", ->
+      field = {name: "field1", start: 2,  type: 'buffer', length: 3 }
+        
+      result = @subject.findFieldLength(field)
+      expect(result).to.equal(5)
+
   describe "#findSpecBufferSize", ->
     it "finds the max size of a buffer", ->
       result = @subject.findSpecBufferSize(@bufferLESpec)
-      expect(result).to.equal(46)
+      expect(result).to.equal(50)
 
 
