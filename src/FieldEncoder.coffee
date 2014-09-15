@@ -13,7 +13,7 @@ class FieldEncoder
       when 'int16', 'uint16'          then 2
       when 'uint32', 'int32', 'float' then 4
       when 'double'                   then 8
-      when 'ascii', 'utf8'            then field.length
+      when 'ascii', 'utf8', 'buffer'  then field.length
 
     return field.start + length
 
@@ -36,6 +36,7 @@ class FieldEncoder
         when 'utf8'   then buffer.write(val, fieldSpec.start, fieldSpec.length, 'utf8')
         when 'uint32' then buffer.writeUInt32BE(val, fieldSpec.start)
         when 'int32'  then buffer.writeInt32BE(val, fieldSpec.start)
+        when 'buffer' then val.copy(buffer, fieldSpec.start, 0, fieldSpec.length)
         when 'bit'
           if val is true # protection from type problems
             buffer.writeUInt8(Math.pow(2, fieldSpec.position), fieldSpec.start)
@@ -63,6 +64,7 @@ class FieldEncoder
         when 'utf8'   then buffer.write(val, fieldSpec.start, fieldSpec.length, 'utf8')
         when 'uint32' then buffer.writeUInt32LE(val, fieldSpec.start)
         when 'int32'  then buffer.writeInt32LE(val, fieldSpec.start)
+        when 'buffer' then val.copy(buffer, fieldSpec.start, 0, fieldSpec.length)
         when 'bit'
           if val is true # protection from type problems
             buffer.writeUInt8(Math.pow(2, fieldSpec.position), fieldSpec.start)

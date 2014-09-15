@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.4.0 (2013-03-26)
+- Added default value field
+
 ## 0.3.2 (2013-03-24)
 - Performance improvements for field encoding, write to the same buffer when encoding fields
 

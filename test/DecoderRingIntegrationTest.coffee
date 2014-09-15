@@ -28,6 +28,7 @@ describe "BinaryDecoderRing Integration Test", ->
       expect(result.field11).to.be.true
       expect(result.field12).to.equal(79001)
       expect(result.field13).to.equal(-79001)
+      expect(result.field14).to.eql(new Buffer("test"))
 
     it "decodes little endian specifications", ->
       result = @subject.decode(@bufferLE, @bufferLESpec)
@@ -45,6 +46,7 @@ describe "BinaryDecoderRing Integration Test", ->
       expect(result.field11).to.be.true
       expect(result.field12).to.equal(79002)
       expect(result.field13).to.equal(-79002)
+      expect(result.field14).to.eql(new Buffer("test"))
 
   describe "#encode", ->
     it "encodes big endian specifications", ->

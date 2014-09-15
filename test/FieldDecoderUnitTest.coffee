@@ -70,6 +70,11 @@ describe "FieldDecoder unit test", ->
       result = @subject.decodeFieldBE(@bufferBE, fieldSpec)
       expect(result).to.equal(-79001)
 
+    it "decodes a buffer field", ->
+      fieldSpec = {name: "foo", start: 46, type: 'buffer', length: 4}
+      result = @subject.decodeFieldBE(@bufferBE, fieldSpec)
+      expect(result).to.eql(new Buffer("test"))
+
 
   describe "#decodeFieldLE", ->
     it "decodes an int8 field", ->
@@ -126,4 +131,9 @@ describe "FieldDecoder unit test", ->
       fieldSpec = {name: "foo", start: 42, type: 'int32'}
       result = @subject.decodeFieldLE(@bufferLE, fieldSpec)
       expect(result).to.equal(-79002)
+
+    it "decodes a buffer field", ->
+      fieldSpec = {name: "foo", start: 46, type: 'buffer', length: 4}
+      result = @subject.decodeFieldLE(@bufferLE, fieldSpec)
+      expect(result).to.eql(new Buffer("test"))
 
