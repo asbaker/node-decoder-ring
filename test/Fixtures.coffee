@@ -1,5 +1,3 @@
-require('buffer-concat') if !Buffer.concat?
-
 bufferBE = new Buffer(46)
 bufferBE.writeInt8(-127, 0)
 bufferBE.writeUInt8(254, 1)

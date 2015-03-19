@@ -1,9 +1,6 @@
 expect = require("chai").expect
 
-DecoderRing = require("../src/DecoderRing") # coffeescript
-# DecoderRing = require("../lib/DecoderRing") # compiled javascript
-
-# DecoderRing = require("decoder-ring") # package
+DecoderRing = require("../src/DecoderRing")
 
 describe "BinaryDecoderRing Integration Test", ->
   beforeEach ->

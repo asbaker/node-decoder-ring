@@ -28,11 +28,10 @@
     "mocha": "1.8.1",
     "chai": "1.5.0",
     "sinon": "1.6.0",
-    "coffee-script": "1.6.1",
-    "buffer-concat": "0.0.1"
+    "coffee-script": "1.6.1"
   },
   "engines": {
-    "node": ">= 0.6"
+    "node": ">= 0.8"
   },
   "bugs": "http://github.com/asbaker/node-decoder-ring/issues",
   "homepage": "http://github.com/asbaker/node-decoder-ring",
