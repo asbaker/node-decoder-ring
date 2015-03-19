@@ -143,3 +143,18 @@ describe "DecoderRing unit test", ->
       result = @subject.encode(obj, spec)
       expect(result).to.deep.equal(threeBuffer)
 
+    it "doesn't calculate the size if a length field is in the spec", ->
+      fooBuffer = new Buffer("foo")
+      obj = { field1: 11 }
+
+      spec =
+        length: 1
+        fields: [
+          { name: "field1", start: 0, type: 'int8' }
+        ]
+
+      @fieldEncoderMock.expects("findSpecBufferSize").never()
+
+      @subject.encode(obj, spec)
+
+

@@ -18,7 +18,7 @@ class DecoderRing
     return obj
 
   encode: (obj, spec) ->
-    size = @fieldEncoder.findSpecBufferSize(spec)
+    size = spec.length ? @fieldEncoder.findSpecBufferSize(spec)
     buffer = new Buffer(size)
     buffer.fill(0)
 
