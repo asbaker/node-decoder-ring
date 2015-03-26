@@ -157,4 +157,22 @@ describe "DecoderRing unit test", ->
 
       @subject.encode(obj, spec)
 
+    it "throws an error if checkMissingFields is true and there is a field in the object given but no the spec", ->
+      fooBuffer = new Buffer("foo")
+      obj = { missing: 11 }
+
+      spec =
+        length: 1
+        fields: [
+          { name: "field1", start: 0, type: 'int8' }
+        ]
+
+      try
+        @subject.encode(obj, spec, true)
+      catch e
+        error = e
+
+      expect(error).to.exist
+
+
 

@@ -14,7 +14,7 @@ class FieldDecoder
       when 'buffer' then buffer.slice(fieldSpec.start, fieldSpec.start+fieldSpec.length)
       when 'bit'
         i = buffer.readUInt8(fieldSpec.start)
-        (i & Math.pow(2, fieldSpec.position)) > 0
+        (i & 2 ** fieldSpec.position) > 0
 #TODO error case
 
   decodeFieldLE: (buffer, fieldSpec) ->
@@ -32,7 +32,7 @@ class FieldDecoder
       when 'buffer' then buffer.slice(fieldSpec.start, fieldSpec.start+fieldSpec.length)
       when 'bit'
         i = buffer.readUInt8(fieldSpec.start)
-        (i & Math.pow(2, fieldSpec.position)) > 0
+        (i & 2 ** fieldSpec.position) > 0
 #TODO error case
 
 module.exports = FieldDecoder

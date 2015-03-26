@@ -17,10 +17,13 @@ class DecoderRing
 
     return obj
 
-  encode: (obj, spec) ->
+  encode: (obj, spec, checkMissingFields = false) ->
     size = spec.length ? @fieldEncoder.findSpecBufferSize(spec)
     buffer = new Buffer(size)
     buffer.fill(0)
+
+    if checkMissingFields
+      @checkForMissingSpecFields(obj, spec)
 
     if spec.bigEndian
       encodeFun = @fieldEncoder.encodeFieldBE
@@ -30,17 +33,22 @@ class DecoderRing
     bitFieldAccumulator = {}
 
     for fieldSpec in spec.fields
-      unless fieldSpec.type is 'bit'
-        buffer = encodeFun(buffer, obj, fieldSpec)
-      else
-        val = if obj[fieldSpec.name] then Math.pow(2, fieldSpec.position) else 0
+      if fieldSpec.type is 'bit'
+        val = if obj[fieldSpec.name] then 2 ** fieldSpec.position else 0
         currentVal = bitFieldAccumulator["#{fieldSpec.start}"] || 0
         bitFieldAccumulator["#{fieldSpec.start}"] = currentVal + val
+      else
+        buffer = encodeFun(buffer, obj, fieldSpec)
 
     # encode all the bit fields that we accumulated
     for r in Object.keys(bitFieldAccumulator)
-      buffer = encodeFun(buffer, bitFieldAccumulator, {name: r, start: parseInt(r), type: 'uint8'})
+      buffer = encodeFun(buffer, bitFieldAccumulator, { name: r, start: parseInt(r), type: 'uint8' })
 
     return buffer
+
+  checkForMissingSpecFields: (obj, spec) ->
+    for key in Object.keys(obj)
+      if !spec[key]?
+        throw new Error("Key #{key} was not found in spec")
 
 module.exports = DecoderRing

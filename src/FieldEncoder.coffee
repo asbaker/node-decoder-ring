@@ -39,7 +39,7 @@ class FieldEncoder
         when 'buffer' then val.copy(buffer, fieldSpec.start, 0, fieldSpec.length)
         when 'bit'
           if val is true # protection from type problems
-            buffer.writeUInt8(Math.pow(2, fieldSpec.position), fieldSpec.start)
+            buffer.writeUInt8(2 ** fieldSpec.position, fieldSpec.start)
           else
             buffer.writeUInt8(0, fieldSpec.start)
         #TODO error case
@@ -67,7 +67,7 @@ class FieldEncoder
         when 'buffer' then val.copy(buffer, fieldSpec.start, 0, fieldSpec.length)
         when 'bit'
           if val is true # protection from type problems
-            buffer.writeUInt8(Math.pow(2, fieldSpec.position), fieldSpec.start)
+            buffer.writeUInt8(2 ** fieldSpec.position, fieldSpec.start)
           else
             buffer.writeUInt8(0, fieldSpec.start)
         #TODO error case
