@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.5.0 (2015-05-28)
+- Added raw buffer type
+
 ## 0.4.0 (2013-03-26)
 - Added default value field
 
