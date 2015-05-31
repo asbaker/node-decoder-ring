@@ -1,7 +1,7 @@
 node-decoder-ring
 =================
 
-[![Build Status](https://travis-ci.org/asbaker/node-decoder-ring.png)](https://travis-ci.org/asbaker/node-decoder-ring])
+[![Build Status](https://travis-ci.org/asbaker/node-decoder-ring.png)](https://travis-ci.org/asbaker/node-decoder-ring)
 
 *IMPORTANT: This module only works with node v0.6.0 and later.*
 
