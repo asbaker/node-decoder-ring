@@ -4,7 +4,7 @@ FieldEncoder = require("./FieldEncoder")
 class DecoderRing
   constructor: (@fieldDecoder = new FieldDecoder, @fieldEncoder = new FieldEncoder) ->
 
-  decode: (buffer, spec) ->
+  decode: (buffer, spec, noAssert = false) ->
     obj = {}
 
     if spec.bigEndian
@@ -13,11 +13,11 @@ class DecoderRing
       decodeFun = @fieldDecoder.decodeFieldLE
 
     for field in spec.fields
-      obj[field.name] = decodeFun(buffer, field)
+      obj[field.name] = decodeFun(buffer, field, noAssert)
 
     return obj
 
-  encode: (obj, spec, checkMissingFields = false) ->
+  encode: (obj, spec, checkMissingFields = false, noAssert = false) ->
     size = spec.length ? @fieldEncoder.findSpecBufferSize(spec)
     buffer = new Buffer(size)
     buffer.fill(0)
@@ -38,11 +38,11 @@ class DecoderRing
         currentVal = bitFieldAccumulator["#{fieldSpec.start}"] || 0
         bitFieldAccumulator["#{fieldSpec.start}"] = currentVal + val
       else
-        buffer = encodeFun(buffer, obj, fieldSpec)
+        buffer = encodeFun(buffer, obj, fieldSpec, noAssert)
 
     # encode all the bit fields that we accumulated
     for r in Object.keys(bitFieldAccumulator)
-      buffer = encodeFun(buffer, bitFieldAccumulator, { name: r, start: parseInt(r), type: 'uint8' })
+      buffer = encodeFun(buffer, bitFieldAccumulator, { name: r, start: parseInt(r), type: 'uint8' }, noAssert)
 
     return buffer
 

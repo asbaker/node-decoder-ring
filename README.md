@@ -72,6 +72,14 @@ All fields must have a name, a starting byte, and a type. The name is used for a
 	Bit fields must have a position property which is used to check if a specific bit is on or off in the 1-byte unsigned integer.
 	The position of the bit of interest, is defined as which power of two the bit falls in the integer. For the bit in the 128th's place, the position would be 7, for the bit in the 1's place the position would be 0.
 
+### API
+
+decode: (buffer, spec, noAssert = false)
+  * set noAssert to true to ignore validation of offsets
+
+encode: (obj, spec, checkMissingFields = false, noAssert = false)
+  * set checkMissingFields to true to throw an exception if a field in the encoded object is missing from the spec
+  * set noAssert to true to ignore validation of written values and offsets
 
 ### Example
 
