@@ -59,8 +59,7 @@ describe "DecoderRing unit test", ->
 
   describe "#encode", ->
     it "fills the buffer with 0's", ->
-      bufferSize50With0s = new Buffer(50)
-      bufferSize50With0s.fill(0)
+      bufferSize50With0s = Buffer.alloc(50)
 
       spec = {bigEndian: true, fields: []}
 
@@ -73,7 +72,7 @@ describe "DecoderRing unit test", ->
 
 
     it "encodes big endian using the field decoder", ->
-      fooBuffer = new Buffer("foo")
+      fooBuffer = Buffer.from("foo")
       obj = {field1: 11, field2: -23}
 
       spec = {
@@ -95,7 +94,7 @@ describe "DecoderRing unit test", ->
       expect(result).to.deep.equal(fooBuffer)
 
     it "encodes little endian using the field decoder", ->
-      fooBuffer = new Buffer("foo")
+      fooBuffer = Buffer.from("foo")
       obj = {field1: 11, field2: -23}
 
       spec = {
@@ -117,11 +116,11 @@ describe "DecoderRing unit test", ->
       expect(result).to.deep.equal(fooBuffer)
 
     it "properly ands together bit fields with the same start value", ->
-      oneBuffer = new Buffer(1)
+      oneBuffer = Buffer.alloc(1)
       oneBuffer.writeUInt8(1, 0)
-      twoBuffer = new Buffer(1)
+      twoBuffer = Buffer.alloc(1)
       twoBuffer.writeUInt8(2, 0)
-      threeBuffer = new Buffer(1)
+      threeBuffer = Buffer.alloc(1)
       threeBuffer.writeUInt8(3, 0)
 
       obj = {field1: true, field2: true}

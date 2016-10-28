@@ -25,7 +25,7 @@ describe "BinaryDecoderRing Integration Test", ->
       expect(result.field11).to.be.true
       expect(result.field12).to.equal(79001)
       expect(result.field13).to.equal(-79001)
-      expect(result.field14).to.eql(new Buffer("test"))
+      expect(result.field14).to.eql(Buffer.from("test"))
 
     it "decodes little endian specifications", ->
       result = @subject.decode(@bufferLE, @bufferLESpec)
@@ -43,7 +43,7 @@ describe "BinaryDecoderRing Integration Test", ->
       expect(result.field11).to.be.true
       expect(result.field12).to.equal(79002)
       expect(result.field13).to.equal(-79002)
-      expect(result.field14).to.eql(new Buffer("test"))
+      expect(result.field14).to.eql(Buffer.from("test"))
 
     it "doesn't assert decoding values if noAssert is true", ->
       spec =
@@ -52,7 +52,7 @@ describe "BinaryDecoderRing Integration Test", ->
         ]
 
       try
-        @subject.decode(new Buffer(1), spec, true)
+        @subject.decode(Buffer.alloc(1), spec, true)
       catch e
         error = e
 
@@ -65,7 +65,7 @@ describe "BinaryDecoderRing Integration Test", ->
         ]
 
       try
-        @subject.decode(new Buffer(1), spec, false)
+        @subject.decode(Buffer.from(1), spec, false)
       catch e
         error = e
 
@@ -102,7 +102,7 @@ describe "BinaryDecoderRing Integration Test", ->
       }
 
       decoded = @subject.encode(obj, spec)
-      shouldBe = new Buffer(2)
+      shouldBe = Buffer.alloc(2)
       shouldBe.writeInt8(3,0)
       shouldBe.writeInt8(8,1)
       expect(decoded).to.deep.equal(shouldBe)

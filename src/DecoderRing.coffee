@@ -19,8 +19,7 @@ class DecoderRing
 
   encode: (obj, spec, checkMissingFields = false, noAssert = false) ->
     size = spec.length ? @fieldEncoder.findSpecBufferSize(spec)
-    buffer = new Buffer(size)
-    buffer.fill(0)
+    buffer = Buffer.alloc(size)
 
     if checkMissingFields
       @checkForMissingSpecFields(obj, spec)

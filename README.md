@@ -87,8 +87,7 @@ encode: (obj, spec, checkMissingFields = false, noAssert = false)
 var DecoderRing = require("decoder-ring");
 var decoderRing = new DecoderRing();
 
-var bufferBE = new Buffer(51);
-bufferBE.fill(0);
+var bufferBE = Buffer.alloc(51);
 bufferBE.writeInt8(-127, 0);
 bufferBE.writeUInt8(254, 1);
 bufferBE.writeInt16BE(5327, 2);
