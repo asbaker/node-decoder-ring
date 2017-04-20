@@ -17,7 +17,7 @@ class DecoderRing
 
     return obj
 
-  encode: (obj, spec, checkMissingFields = false, noAssert = false) ->
+  encode: (obj, spec, checkMissingFields = false, noAssert = false, padding = null) ->
     size = spec.length ? @fieldEncoder.findSpecBufferSize(spec)
     buffer = Buffer.alloc(size)
 
@@ -37,7 +37,7 @@ class DecoderRing
         currentVal = bitFieldAccumulator["#{fieldSpec.start}"] || 0
         bitFieldAccumulator["#{fieldSpec.start}"] = currentVal + val
       else
-        buffer = encodeFun(buffer, obj, fieldSpec, noAssert)
+        buffer = encodeFun(buffer, obj, fieldSpec, noAssert, padding)
 
     # encode all the bit fields that we accumulated
     for r in Object.keys(bitFieldAccumulator)

@@ -153,4 +153,40 @@ describe "DecoderRing unit test", ->
 
       @subject.encode(field1: 11, spec)
 
+    it "passes padding args to BE field encoder", ->
+      spec =
+        bigEndian: true
+        length: 10
+        fields: [
+          { name: "field1", start: 0, type: 'ascii', length: 10}
+        ]
 
+      inputObj =
+        field1: "Deckard"
+
+      padObj =
+        padCharacter: ' '
+
+      @fieldEncoderMock.expects('encodeFieldBE').withArgs(sinon.match.instanceOf(Buffer),
+      sinon.match.object, sinon.match.object, false, padObj)
+
+      @subject.encode(inputObj, spec, false, false, padObj)
+
+    it "passes padding args to LE field encoder", ->
+      spec =
+        bigEndian: false
+        length: 10
+        fields: [
+          { name: "field1", start: 0, type: 'ascii', length: 10}
+        ]
+
+      inputObj =
+        field1: "Deckard"
+
+      padObj =
+        padCharacter: ' '
+
+      @fieldEncoderMock.expects('encodeFieldLE').withArgs(sinon.match.instanceOf(Buffer),
+      sinon.match.object, sinon.match.object, false, padObj)
+
+      @subject.encode(inputObj, spec, false, false, padObj)

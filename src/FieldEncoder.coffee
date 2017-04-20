@@ -1,3 +1,5 @@
+padEnd = require('lodash.padend')
+
 class FieldEncoder
   findSpecBufferSize: (spec) ->
     sizes = []
@@ -18,11 +20,14 @@ class FieldEncoder
     return field.start + length
 
 
-  encodeFieldBE: (buffer, obj, fieldSpec, noAssert = false) ->
+  encodeFieldBE: (buffer, obj, fieldSpec, noAssert = false, padding = null) ->
     val = obj[fieldSpec.name]
 
     if !val? and fieldSpec.default?
       val = fieldSpec.default
+
+    if padding?
+      val = padEnd(val, fieldSpec.length, padding.padCharacter)
 
     if val?
       switch fieldSpec.type
@@ -46,11 +51,14 @@ class FieldEncoder
 
     return buffer
 
-  encodeFieldLE: (buffer, obj, fieldSpec, noAssert = false) ->
+  encodeFieldLE: (buffer, obj, fieldSpec, noAssert = false, padding = null) ->
     val = obj[fieldSpec.name]
 
     if !val? and fieldSpec.default?
       val = fieldSpec.default
+
+    if padding?
+      val = padEnd(val, fieldSpec.length, padding.padCharacter)
 
     if val?
       switch fieldSpec.type
