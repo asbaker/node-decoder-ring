@@ -1,4 +1,4 @@
-_ = require('lodash')
+padEnd = require('lodash.padend')
 
 class FieldEncoder
   findSpecBufferSize: (spec) ->
@@ -27,7 +27,7 @@ class FieldEncoder
       val = fieldSpec.default
 
     if padding?
-      val = @_pad(val, fieldSpec.length, padding.padCharacter)
+      val = padEnd(val, fieldSpec.length, padding.padCharacter)
 
     if val?
       switch fieldSpec.type
@@ -58,7 +58,7 @@ class FieldEncoder
       val = fieldSpec.default
 
     if padding?
-      val = @_pad(val, fieldSpec.length, padding.padCharacter)
+      val = padEnd(val, fieldSpec.length, padding.padCharacter)
 
     if val?
       switch fieldSpec.type
@@ -81,7 +81,5 @@ class FieldEncoder
         #TODO error case
 
     return buffer
-
-  _pad: (val, length, character) -> _.padEnd(val, length, character)
 
 module.exports = FieldEncoder
