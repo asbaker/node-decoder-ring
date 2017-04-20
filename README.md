@@ -3,8 +3,6 @@ node-decoder-ring
 
 [![Build Status](https://travis-ci.org/asbaker/node-decoder-ring.png)](https://travis-ci.org/asbaker/node-decoder-ring])
 
-*IMPORTANT: This module only works with node v0.6.0 and later.*
-
 Decoder Ring allows you to use a Javascript object as a specification to decode [Node.js Buffers](http://nodejs.org/api/buffer.html) into a Javascript object.
 
 ## Installation
@@ -74,11 +72,11 @@ All fields must have a name, a starting byte, and a type. The name is used for a
 
 ### API
 
-decode: (buffer, spec, noAssert = false)
+decode: (buffer, spec, { noAssert = false })
   * set noAssert to true to ignore validation of offsets
 
-encode: (obj, spec, checkMissingFields = false, noAssert = false)
-  * set checkMissingFields to true to throw an exception if a field in the encoded object is missing from the spec
+encode: (obj, spec, { noAssert = false, padding = null })
+  * set padding to a character to right pad ascii and utf8 strings instead of using null termination
   * set noAssert to true to ignore validation of written values and offsets
 
 ### Example
