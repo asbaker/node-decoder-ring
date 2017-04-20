@@ -137,6 +137,20 @@ describe "FieldEncoder unit test", ->
       result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec)
       expect(result).to.deep.equal(expectedBuffer)
 
+    it "encodes an ascii field with padding", ->
+      expectedBuffer = Buffer.alloc(15)
+      expectedBuffer.write("ascii text     ", 0, 15, 'ascii')
+
+      outBuffer = Buffer.alloc(15)
+
+      obj = {field7: "ascii text"}
+      fieldSpec = {name: "field7", start: 0, type: 'ascii', length: 15}
+      padObj = { padCharacter: ' '  }
+
+      result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec, false, padObj)
+      expect(result).to.deep.equal(expectedBuffer)
+
+
     it "encodes an utf8 field", ->
       expectedBuffer = Buffer.alloc(15)
       expectedBuffer.write("utf8 text", 1, 9, 'utf8')
@@ -314,6 +328,19 @@ describe "FieldEncoder unit test", ->
       result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec)
       expect(result).to.deep.equal(expectedBuffer)
 
+    it "encodes an ascii field with padding", ->
+      expectedBuffer = Buffer.alloc(15)
+      expectedBuffer.write("ascii text     ", 0, 15, 'ascii')
+
+      outBuffer = Buffer.alloc(15)
+
+      obj = {field7: "ascii text"}
+      fieldSpec = {name: "field7", start: 0, type: 'ascii', length: 15}
+      padObj = { padCharacter: ' '  }
+
+      result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec, false, padObj)
+      expect(result).to.deep.equal(expectedBuffer)
+
     it "encodes an utf8 field", ->
       expectedBuffer = Buffer.alloc(15)
       expectedBuffer.write("utf8 text", 1, 9, 'utf8')
@@ -437,7 +464,7 @@ describe "FieldEncoder unit test", ->
 
     it "works for buffers", ->
       field = {name: "field1", start: 2,  type: 'buffer', length: 3 }
-        
+
       result = @subject.findFieldLength(field)
       expect(result).to.equal(5)
 
