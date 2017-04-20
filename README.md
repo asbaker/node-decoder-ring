@@ -1,7 +1,7 @@
 node-decoder-ring
 =================
 
-[![Build Status](https://travis-ci.org/asbaker/node-decoder-ring.png)](https://travis-ci.org/asbaker/node-decoder-ring])
+[![Build Status](https://travis-ci.org/asbaker/node-decoder-ring.png)](https://travis-ci.org/asbaker/node-decoder-ring)
 
 Decoder Ring allows you to use a Javascript object as a specification to decode [Node.js Buffers](http://nodejs.org/api/buffer.html) into a Javascript object.
 
