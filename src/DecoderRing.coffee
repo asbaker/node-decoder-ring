@@ -1,10 +1,13 @@
 FieldDecoder = require("./FieldDecoder")
 FieldEncoder = require("./FieldEncoder")
+defaults     = require('lodash.defaults')
 
 class DecoderRing
   constructor: (@fieldDecoder = new FieldDecoder, @fieldEncoder = new FieldEncoder) ->
 
-  decode: (buffer, spec, noAssert = false) ->
+  decode: (buffer, spec, options = {}) ->
+    defaults(options, noAssert: false)
+
     obj = {}
 
     if spec.bigEndian
@@ -13,21 +16,23 @@ class DecoderRing
       decodeFun = @fieldDecoder.decodeFieldLE
 
     for field in spec.fields
-      obj[field.name] = decodeFun(buffer, field, noAssert)
+      obj[field.name] = decodeFun(buffer, field, options.noAssert)
 
     return obj
 
-  encode: (obj, spec, checkMissingFields = false, noAssert = false, padding = null) ->
+  encode: (obj, spec, options = {}) ->
+    defaults options,
+      noAssert: false
+      padding:  null
+
     size = spec.length ? @fieldEncoder.findSpecBufferSize(spec)
     buffer = Buffer.alloc(size)
 
-    if checkMissingFields
-      @checkForMissingSpecFields(obj, spec)
-
-    if spec.bigEndian
-      encodeFun = @fieldEncoder.encodeFieldBE
-    else
-      encodeFun = @fieldEncoder.encodeFieldLE
+    encodeFun =
+      if spec.bigEndian
+        @fieldEncoder.encodeFieldBE
+      else
+        @fieldEncoder.encodeFieldLE
 
     bitFieldAccumulator = {}
 
@@ -37,17 +42,18 @@ class DecoderRing
         currentVal = bitFieldAccumulator["#{fieldSpec.start}"] || 0
         bitFieldAccumulator["#{fieldSpec.start}"] = currentVal + val
       else
-        buffer = encodeFun(buffer, obj, fieldSpec, noAssert, padding)
+        buffer = encodeFun(buffer, obj, fieldSpec, options.noAssert, options.padding)
 
     # encode all the bit fields that we accumulated
     for r in Object.keys(bitFieldAccumulator)
-      buffer = encodeFun(buffer, bitFieldAccumulator, { name: r, start: parseInt(r), type: 'uint8' }, noAssert)
+      buffer = encodeFun(
+        buffer,
+        bitFieldAccumulator,
+        { name: r, start: parseInt(r), type: 'uint8' },
+        options.noAssert,
+        options.padding
+      )
 
     return buffer
-
-  checkForMissingSpecFields: (obj, spec) ->
-    for key in Object.keys(obj)
-      if !spec[key]?
-        throw new Error("Key #{key} was not found in spec")
 
 module.exports = DecoderRing

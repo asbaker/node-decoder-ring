@@ -145,9 +145,8 @@ describe "FieldEncoder unit test", ->
 
       obj = {field7: "ascii text"}
       fieldSpec = {name: "field7", start: 0, type: 'ascii', length: 15}
-      padObj = { padCharacter: ' '  }
 
-      result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec, false, padObj)
+      result = @subject.encodeFieldBE(outBuffer, obj, fieldSpec, false, ' ')
       expect(result).to.deep.equal(expectedBuffer)
 
 
@@ -336,9 +335,8 @@ describe "FieldEncoder unit test", ->
 
       obj = {field7: "ascii text"}
       fieldSpec = {name: "field7", start: 0, type: 'ascii', length: 15}
-      padObj = { padCharacter: ' '  }
 
-      result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec, false, padObj)
+      result = @subject.encodeFieldLE(outBuffer, obj, fieldSpec, false, ' ')
       expect(result).to.deep.equal(expectedBuffer)
 
     it "encodes an utf8 field", ->

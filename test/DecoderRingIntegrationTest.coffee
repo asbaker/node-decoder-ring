@@ -52,7 +52,7 @@ describe "BinaryDecoderRing Integration Test", ->
         ]
 
       try
-        @subject.decode(Buffer.alloc(1), spec, true)
+        @subject.decode(Buffer.alloc(1), spec, noAssert: true)
       catch e
         error = e
 
@@ -65,7 +65,7 @@ describe "BinaryDecoderRing Integration Test", ->
         ]
 
       try
-        @subject.decode(Buffer.from(1), spec, false)
+        @subject.decode(Buffer.from(1), spec, noAssert: false)
       catch e
         error = e
 
@@ -103,22 +103,9 @@ describe "BinaryDecoderRing Integration Test", ->
 
       decoded = @subject.encode(obj, spec)
       shouldBe = Buffer.alloc(2)
-      shouldBe.writeInt8(3,0)
-      shouldBe.writeInt8(8,1)
+      shouldBe.writeInt8(3, 0)
+      shouldBe.writeInt8(8, 1)
       expect(decoded).to.deep.equal(shouldBe)
-
-    it "throws an error if checkMissingFields is true and there is a field in the object given but no the spec", ->
-      spec =
-        fields: [
-          { name: "field1", start: 0, type: 'int8' }
-        ]
-
-      try
-        @subject.encode(missing: 11, spec, true)
-      catch e
-        error = e
-
-      expect(error).to.exist
 
     it "doesn't assert encoding values if noAssert is true", ->
       spec =
@@ -127,7 +114,7 @@ describe "BinaryDecoderRing Integration Test", ->
         ]
 
       try
-        @subject.encode(field1: 5000, spec, false, true)
+        @subject.encode(field1: 5000, spec, noAssert: true)
       catch e
         error = e
 
@@ -140,7 +127,7 @@ describe "BinaryDecoderRing Integration Test", ->
         ]
 
       try
-        @subject.encode(field1: 5000, spec, false, false)
+        @subject.encode(field1: 5000, spec, noAssert: false)
       catch e
         error = e
 

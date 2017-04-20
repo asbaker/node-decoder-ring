@@ -7,7 +7,7 @@ class FieldEncoder
     for f in spec.fields
       sizes.push(@findFieldLength(f))
 
-    sizes.reduce((a,b) -> Math.max(a,b))
+    sizes.reduce((a, b) -> Math.max(a, b))
 
   findFieldLength: (field) ->
     length = switch field.type
@@ -20,14 +20,11 @@ class FieldEncoder
     return field.start + length
 
 
-  encodeFieldBE: (buffer, obj, fieldSpec, noAssert = false, padding = null) ->
+  encodeFieldBE: (buffer, obj, fieldSpec, noAssert, padding) ->
     val = obj[fieldSpec.name]
 
     if !val? and fieldSpec.default?
       val = fieldSpec.default
-
-    if padding?
-      val = padEnd(val, fieldSpec.length, padding.padCharacter)
 
     if val?
       switch fieldSpec.type
@@ -37,28 +34,29 @@ class FieldEncoder
         when 'uint16' then buffer.writeUInt16BE(val, fieldSpec.start, noAssert)
         when 'float'  then buffer.writeFloatBE(val, fieldSpec.start, noAssert)
         when 'double' then buffer.writeDoubleBE(val, fieldSpec.start, noAssert)
-        when 'ascii'  then buffer.write(val, fieldSpec.start, fieldSpec.length, 'ascii')
-        when 'utf8'   then buffer.write(val, fieldSpec.start, fieldSpec.length, 'utf8')
         when 'uint32' then buffer.writeUInt32BE(val, fieldSpec.start, noAssert)
         when 'int32'  then buffer.writeInt32BE(val, fieldSpec.start, noAssert)
         when 'buffer' then val.copy(buffer, fieldSpec.start, 0, fieldSpec.length)
+
+        when 'ascii', 'utf8'
+          if padding?
+            val = padEnd(val, fieldSpec.length, padding)
+
+          buffer.write(val, fieldSpec.start, fieldSpec.length, fieldSpec.type)
+
         when 'bit'
           if val is true # protection from type problems
             buffer.writeUInt8(2 ** fieldSpec.position, fieldSpec.start, noAssert)
           else
             buffer.writeUInt8(0, fieldSpec.start, noAssert)
-        #TODO error case
 
     return buffer
 
-  encodeFieldLE: (buffer, obj, fieldSpec, noAssert = false, padding = null) ->
+  encodeFieldLE: (buffer, obj, fieldSpec, noAssert, padding) ->
     val = obj[fieldSpec.name]
 
     if !val? and fieldSpec.default?
       val = fieldSpec.default
-
-    if padding?
-      val = padEnd(val, fieldSpec.length, padding.padCharacter)
 
     if val?
       switch fieldSpec.type
@@ -68,17 +66,21 @@ class FieldEncoder
         when 'uint16' then buffer.writeUInt16LE(val, fieldSpec.start, noAssert)
         when 'float'  then buffer.writeFloatLE(val, fieldSpec.start, noAssert)
         when 'double' then buffer.writeDoubleLE(val, fieldSpec.start, noAssert)
-        when 'ascii'  then buffer.write(val, fieldSpec.start, fieldSpec.length, 'ascii')
-        when 'utf8'   then buffer.write(val, fieldSpec.start, fieldSpec.length, 'utf8')
         when 'uint32' then buffer.writeUInt32LE(val, fieldSpec.start, noAssert)
         when 'int32'  then buffer.writeInt32LE(val, fieldSpec.start, noAssert)
         when 'buffer' then val.copy(buffer, fieldSpec.start, 0, fieldSpec.length)
+
+        when 'ascii', 'utf8'
+          if padding?
+            val = padEnd(val, fieldSpec.length, padding)
+
+          buffer.write(val, fieldSpec.start, fieldSpec.length, fieldSpec.type)
+
         when 'bit'
           if val is true # protection from type problems
             buffer.writeUInt8(2 ** fieldSpec.position, fieldSpec.start, noAssert)
           else
             buffer.writeUInt8(0, fieldSpec.start, noAssert)
-        #TODO error case
 
     return buffer
 

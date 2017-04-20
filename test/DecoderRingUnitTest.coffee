@@ -18,12 +18,6 @@ describe "DecoderRing unit test", ->
     @fieldDecoderMock.verify()
     @fieldEncoderMock.verify()
 
-  describe "responds to", ->
-    it "decode", ->
-      expect(@subject).to.respondTo("decode")
-    it "encode", ->
-      expect(@subject).to.respondTo("encode")
-
   describe "#decode", ->
     it "decodes big endian using the field decoder", ->
       spec = {
@@ -164,13 +158,10 @@ describe "DecoderRing unit test", ->
       inputObj =
         field1: "Deckard"
 
-      padObj =
-        padCharacter: ' '
-
       @fieldEncoderMock.expects('encodeFieldBE').withArgs(sinon.match.instanceOf(Buffer),
-      sinon.match.object, sinon.match.object, false, padObj)
+      sinon.match.object, sinon.match.object, false, ' ')
 
-      @subject.encode(inputObj, spec, false, false, padObj)
+      @subject.encode(inputObj, spec, padding: ' ')
 
     it "passes padding args to LE field encoder", ->
       spec =
@@ -183,10 +174,7 @@ describe "DecoderRing unit test", ->
       inputObj =
         field1: "Deckard"
 
-      padObj =
-        padCharacter: ' '
-
       @fieldEncoderMock.expects('encodeFieldLE').withArgs(sinon.match.instanceOf(Buffer),
-      sinon.match.object, sinon.match.object, false, padObj)
+        sinon.match.object, sinon.match.object, false, ' ')
 
-      @subject.encode(inputObj, spec, false, false, padObj)
+      @subject.encode(inputObj, spec, padding: ' ')
