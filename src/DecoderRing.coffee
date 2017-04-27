@@ -1,10 +1,13 @@
 FieldDecoder = require("./FieldDecoder")
 FieldEncoder = require("./FieldEncoder")
+defaults     = require('lodash.defaults')
 
 class DecoderRing
   constructor: (@fieldDecoder = new FieldDecoder, @fieldEncoder = new FieldEncoder) ->
 
-  decode: (buffer, spec) ->
+  decode: (buffer, spec, options = {}) ->
+    defaults(options, noAssert: false)
+
     obj = {}
 
     if spec.bigEndian
@@ -13,33 +16,43 @@ class DecoderRing
       decodeFun = @fieldDecoder.decodeFieldLE
 
     for field in spec.fields
-      obj[field.name] = decodeFun(buffer, field)
+      obj[field.name] = decodeFun(buffer, field, options.noAssert)
 
     return obj
 
-  encode: (obj, spec) ->
-    size = @fieldEncoder.findSpecBufferSize(spec)
-    buffer = new Buffer(size)
-    buffer.fill(0)
+  encode: (obj, spec, options = {}) ->
+    defaults options,
+      noAssert: false
+      padding:  null
 
-    if spec.bigEndian
-      encodeFun = @fieldEncoder.encodeFieldBE
-    else
-      encodeFun = @fieldEncoder.encodeFieldLE
+    size = spec.length ? @fieldEncoder.findSpecBufferSize(spec)
+    buffer = Buffer.alloc(size)
+
+    encodeFun =
+      if spec.bigEndian
+        @fieldEncoder.encodeFieldBE
+      else
+        @fieldEncoder.encodeFieldLE
 
     bitFieldAccumulator = {}
 
     for fieldSpec in spec.fields
-      unless fieldSpec.type is 'bit'
-        buffer = encodeFun(buffer, obj, fieldSpec)
-      else
-        val = if obj[fieldSpec.name] then Math.pow(2, fieldSpec.position) else 0
+      if fieldSpec.type is 'bit'
+        val = if obj[fieldSpec.name] then 2 ** fieldSpec.position else 0
         currentVal = bitFieldAccumulator["#{fieldSpec.start}"] || 0
         bitFieldAccumulator["#{fieldSpec.start}"] = currentVal + val
+      else
+        buffer = encodeFun(buffer, obj, fieldSpec, options.noAssert, options.padding)
 
     # encode all the bit fields that we accumulated
     for r in Object.keys(bitFieldAccumulator)
-      buffer = encodeFun(buffer, bitFieldAccumulator, {name: r, start: parseInt(r), type: 'uint8'})
+      buffer = encodeFun(
+        buffer,
+        bitFieldAccumulator,
+        { name: r, start: parseInt(r), type: 'uint8' },
+        options.noAssert,
+        options.padding
+      )
 
     return buffer
 

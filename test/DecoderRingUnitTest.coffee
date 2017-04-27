@@ -18,12 +18,6 @@ describe "DecoderRing unit test", ->
     @fieldDecoderMock.verify()
     @fieldEncoderMock.verify()
 
-  describe "responds to", ->
-    it "decode", ->
-      expect(@subject).to.respondTo("decode")
-    it "encode", ->
-      expect(@subject).to.respondTo("encode")
-
   describe "#decode", ->
     it "decodes big endian using the field decoder", ->
       spec = {
@@ -59,8 +53,7 @@ describe "DecoderRing unit test", ->
 
   describe "#encode", ->
     it "fills the buffer with 0's", ->
-      bufferSize50With0s = new Buffer(50)
-      bufferSize50With0s.fill(0)
+      bufferSize50With0s = Buffer.alloc(50)
 
       spec = {bigEndian: true, fields: []}
 
@@ -73,7 +66,7 @@ describe "DecoderRing unit test", ->
 
 
     it "encodes big endian using the field decoder", ->
-      fooBuffer = new Buffer("foo")
+      fooBuffer = Buffer.from("foo")
       obj = {field1: 11, field2: -23}
 
       spec = {
@@ -95,7 +88,7 @@ describe "DecoderRing unit test", ->
       expect(result).to.deep.equal(fooBuffer)
 
     it "encodes little endian using the field decoder", ->
-      fooBuffer = new Buffer("foo")
+      fooBuffer = Buffer.from("foo")
       obj = {field1: 11, field2: -23}
 
       spec = {
@@ -117,11 +110,11 @@ describe "DecoderRing unit test", ->
       expect(result).to.deep.equal(fooBuffer)
 
     it "properly ands together bit fields with the same start value", ->
-      oneBuffer = new Buffer(1)
+      oneBuffer = Buffer.alloc(1)
       oneBuffer.writeUInt8(1, 0)
-      twoBuffer = new Buffer(1)
+      twoBuffer = Buffer.alloc(1)
       twoBuffer.writeUInt8(2, 0)
-      threeBuffer = new Buffer(1)
+      threeBuffer = Buffer.alloc(1)
       threeBuffer.writeUInt8(3, 0)
 
       obj = {field1: true, field2: true}
@@ -143,3 +136,45 @@ describe "DecoderRing unit test", ->
       result = @subject.encode(obj, spec)
       expect(result).to.deep.equal(threeBuffer)
 
+    it "doesn't calculate the size if a length field is in the spec", ->
+      spec =
+        length: 1
+        fields: [
+          { name: "field1", start: 0, type: 'int8' }
+        ]
+
+      @fieldEncoderMock.expects("findSpecBufferSize").never()
+
+      @subject.encode(field1: 11, spec)
+
+    it "passes padding args to BE field encoder", ->
+      spec =
+        bigEndian: true
+        length: 10
+        fields: [
+          { name: "field1", start: 0, type: 'ascii', length: 10}
+        ]
+
+      inputObj =
+        field1: "Deckard"
+
+      @fieldEncoderMock.expects('encodeFieldBE').withArgs(sinon.match.instanceOf(Buffer),
+      sinon.match.object, sinon.match.object, false, ' ')
+
+      @subject.encode(inputObj, spec, padding: ' ')
+
+    it "passes padding args to LE field encoder", ->
+      spec =
+        bigEndian: false
+        length: 10
+        fields: [
+          { name: "field1", start: 0, type: 'ascii', length: 10}
+        ]
+
+      inputObj =
+        field1: "Deckard"
+
+      @fieldEncoderMock.expects('encodeFieldLE').withArgs(sinon.match.instanceOf(Buffer),
+        sinon.match.object, sinon.match.object, false, ' ')
+
+      @subject.encode(inputObj, spec, padding: ' ')

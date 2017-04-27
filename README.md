@@ -3,8 +3,6 @@ node-decoder-ring
 
 [![Build Status](https://travis-ci.org/asbaker/node-decoder-ring.png)](https://travis-ci.org/asbaker/node-decoder-ring)
 
-*IMPORTANT: This module only works with node v0.6.0 and later.*
-
 Decoder Ring allows you to use a Javascript object as a specification to decode [Node.js Buffers](http://nodejs.org/api/buffer.html) into a Javascript object.
 
 ## Installation
@@ -72,6 +70,14 @@ All fields must have a name, a starting byte, and a type. The name is used for a
 	Bit fields must have a position property which is used to check if a specific bit is on or off in the 1-byte unsigned integer.
 	The position of the bit of interest, is defined as which power of two the bit falls in the integer. For the bit in the 128th's place, the position would be 7, for the bit in the 1's place the position would be 0.
 
+### API
+
+decode: (buffer, spec, { noAssert = false })
+  * set noAssert to true to ignore validation of offsets
+
+encode: (obj, spec, { noAssert = false, padding = null })
+  * set padding to a character to right pad ascii and utf8 strings instead of using null termination
+  * set noAssert to true to ignore validation of written values and offsets
 
 ### Example
 
@@ -79,8 +85,7 @@ All fields must have a name, a starting byte, and a type. The name is used for a
 var DecoderRing = require("decoder-ring");
 var decoderRing = new DecoderRing();
 
-var bufferBE = new Buffer(51);
-bufferBE.fill(0);
+var bufferBE = Buffer.alloc(51);
 bufferBE.writeInt8(-127, 0);
 bufferBE.writeUInt8(254, 1);
 bufferBE.writeInt16BE(5327, 2);

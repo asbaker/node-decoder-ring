@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.0.0 (2017-04-20)
+- Allow cached length to be included on specs
+- Add noAssert and padding options
+- Remove node 0.6.0 compatibility 
+- Add yarn lockfile
+
 ## 0.5.0 (2015-05-28)
 - Added raw buffer type
 

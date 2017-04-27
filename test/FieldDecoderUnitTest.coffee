@@ -73,7 +73,7 @@ describe "FieldDecoder unit test", ->
     it "decodes a buffer field", ->
       fieldSpec = {name: "foo", start: 46, type: 'buffer', length: 4}
       result = @subject.decodeFieldBE(@bufferBE, fieldSpec)
-      expect(result).to.eql(new Buffer("test"))
+      expect(result).to.eql(Buffer.from("test"))
 
 
   describe "#decodeFieldLE", ->
@@ -135,5 +135,5 @@ describe "FieldDecoder unit test", ->
     it "decodes a buffer field", ->
       fieldSpec = {name: "foo", start: 46, type: 'buffer', length: 4}
       result = @subject.decodeFieldLE(@bufferLE, fieldSpec)
-      expect(result).to.eql(new Buffer("test"))
+      expect(result).to.eql(Buffer.from("test"))
 

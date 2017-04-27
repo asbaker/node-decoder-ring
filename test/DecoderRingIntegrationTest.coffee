@@ -1,9 +1,6 @@
 expect = require("chai").expect
 
-DecoderRing = require("../src/DecoderRing") # coffeescript
-# DecoderRing = require("../lib/DecoderRing") # compiled javascript
-
-# DecoderRing = require("decoder-ring") # package
+DecoderRing = require("../src/DecoderRing")
 
 describe "BinaryDecoderRing Integration Test", ->
   beforeEach ->
@@ -28,7 +25,7 @@ describe "BinaryDecoderRing Integration Test", ->
       expect(result.field11).to.be.true
       expect(result.field12).to.equal(79001)
       expect(result.field13).to.equal(-79001)
-      expect(result.field14).to.eql(new Buffer("test"))
+      expect(result.field14).to.eql(Buffer.from("test"))
 
     it "decodes little endian specifications", ->
       result = @subject.decode(@bufferLE, @bufferLESpec)
@@ -46,7 +43,33 @@ describe "BinaryDecoderRing Integration Test", ->
       expect(result.field11).to.be.true
       expect(result.field12).to.equal(79002)
       expect(result.field13).to.equal(-79002)
-      expect(result.field14).to.eql(new Buffer("test"))
+      expect(result.field14).to.eql(Buffer.from("test"))
+
+    it "doesn't assert decoding values if noAssert is true", ->
+      spec =
+        fields: [
+          { name: "field1", start: 0, type: 'int16' }
+        ]
+
+      try
+        @subject.decode(Buffer.alloc(1), spec, noAssert: true)
+      catch e
+        error = e
+
+      expect(error).to.not.exist
+
+    it "asserts decoding values if noAssert is false", ->
+      spec =
+        fields: [
+          { name: "field1", start: 0, type: 'int16' }
+        ]
+
+      try
+        @subject.decode(Buffer.from(1), spec, noAssert: false)
+      catch e
+        error = e
+
+      expect(error).to.exist
 
   describe "#encode", ->
     it "encodes big endian specifications", ->
@@ -79,8 +102,36 @@ describe "BinaryDecoderRing Integration Test", ->
       }
 
       decoded = @subject.encode(obj, spec)
-      shouldBe = new Buffer(2)
-      shouldBe.writeInt8(3,0)
-      shouldBe.writeInt8(8,1)
+      shouldBe = Buffer.alloc(2)
+      shouldBe.writeInt8(3, 0)
+      shouldBe.writeInt8(8, 1)
       expect(decoded).to.deep.equal(shouldBe)
+
+    it "doesn't assert encoding values if noAssert is true", ->
+      spec =
+        fields: [
+          { name: "field1", start: 0, type: 'int8' }
+        ]
+
+      try
+        @subject.encode(field1: 5000, spec, noAssert: true)
+      catch e
+        error = e
+
+      expect(error).to.not.exist
+
+    it "asserts encoding values if noAssert is false", ->
+      spec =
+        fields: [
+          { name: "field1", start: 0, type: 'int8' }
+        ]
+
+      try
+        @subject.encode(field1: 5000, spec, noAssert: false)
+      catch e
+        error = e
+
+      expect(error).to.exist
+
+
 

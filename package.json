@@ -1,6 +1,6 @@
 {
   "name": "decoder-ring",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "Decode binary buffers using a JSON specification",
   "main": "lib/DecoderRing.js",
   "scripts": {
@@ -23,16 +23,17 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "lodash.defaults": "^4.2.0",
+    "lodash.padend": "^4.6.1"
   },
   "devDependencies": {
-    "mocha": "1.8.1",
-    "chai": "1.5.0",
-    "sinon": "1.6.0",
-    "coffee-script": "1.6.1",
-    "buffer-concat": "0.0.1"
+    "chai": "^3.5.0",
+    "coffee-script": "^1.12.5",
+    "mocha": "^3.2.0",
+    "sinon": "^2.1.0"
   },
   "engines": {
-    "node": ">= 0.6"
+    "node": ">= 4.0.0"
   },
   "bugs": "http://github.com/asbaker/node-decoder-ring/issues",
   "homepage": "http://github.com/asbaker/node-decoder-ring",

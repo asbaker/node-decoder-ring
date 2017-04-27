@@ -1,6 +1,4 @@
-require('buffer-concat') if !Buffer.concat?
-
-bufferBE = new Buffer(46)
+bufferBE = Buffer.alloc(46)
 bufferBE.writeInt8(-127, 0)
 bufferBE.writeUInt8(254, 1)
 bufferBE.writeInt16BE(5327, 2)
@@ -12,9 +10,9 @@ bufferBE.write("utf8 text", 28, 9, 'utf8')
 bufferBE.writeUInt8(129, 37)
 bufferBE.writeUInt32BE(79001, 38)
 bufferBE.writeInt32BE(-79001, 42)
-bufferBE = Buffer.concat([bufferBE, new Buffer("test")])
+bufferBE = Buffer.concat([bufferBE, Buffer.from("test")])
 
-bufferLE = new Buffer(46)
+bufferLE = Buffer.alloc(46)
 bufferLE.writeInt8(-127, 0)
 bufferLE.writeUInt8(254, 1)
 bufferLE.writeInt16LE(5327, 2)
@@ -26,7 +24,7 @@ bufferLE.write("utf8 text", 28, 9, 'utf8')
 bufferLE.writeUInt8(129, 37)
 bufferLE.writeUInt32LE(79002, 38)
 bufferLE.writeInt32LE(-79002, 42)
-bufferLE = Buffer.concat([bufferLE, new Buffer("test")])
+bufferLE = Buffer.concat([bufferLE, Buffer.from("test")])
 
 bufferBESpec = {
   bigEndian: true
